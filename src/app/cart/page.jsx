@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useCart } from "@/context/CartContext";
+import { Plus, Minus, Trash2 } from "lucide-react";
 
 const tabs = [
     { id: "recently", label: "Recently Viewed", icon: "arrow" },
@@ -110,8 +112,11 @@ const ProductCard = ({ product }) => (
 // ── Main Page ──
 export default function ShoppingCartPage() {
     const [activeTab, setActiveTab] = useState("theybought");
-
+    const { cartItems, updateQuantity, removeFromCart } = useCart();
+    
     const currentProducts = products[activeTab] || [];
+    
+    const cartTotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
     return (
         <div className="min-h-screen bg-white font-sans">
@@ -122,19 +127,110 @@ export default function ShoppingCartPage() {
                 <span className="text-gray-700">Shopping Cart</span>
             </div>
 
-            <div className="px-6 py-12 max-w-5xl mx-auto text-center">
+            <div className="px-6 py-12 max-w-5xl mx-auto">
                 {/* Page Title */}
-                <h1 className="text-2xl font-normal text-gray-800 mb-4">Shopping Cart</h1>
+                <h1 className="text-2xl font-normal text-gray-800 mb-8 text-center">Shopping Cart</h1>
 
-                {/* Empty cart message */}
-                <p className="text-base text-gray-600 mb-8">Your shopping cart is empty!</p>
-
-                {/* Continue Button */}
-                <div className="max-w-md mx-auto mb-16">
-                    <button className="w-full bg-primary hover:bg-secondary text-white font-semibold text-base py-4 rounded-sm transition-colors duration-150">
-                        Continue
-                    </button>
-                </div>
+                {cartItems.length === 0 ? (
+                    <div className="text-center">
+                        <p className="text-base text-gray-600 mb-8">Your shopping cart is empty!</p>
+                        <div className="max-w-md mx-auto mb-16">
+                            <Link href="/all-products">
+                                <button className="w-full bg-primary hover:bg-secondary text-white font-semibold text-base py-4 rounded-sm transition-colors duration-150">
+                                    Continue Shopping
+                                </button>
+                            </Link>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="mb-16">
+                        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="bg-gray-50 border-b border-gray-200 text-sm text-gray-500 uppercase tracking-wider">
+                                        <th className="p-4 font-semibold">Product</th>
+                                        <th className="p-4 font-semibold">Price</th>
+                                        <th className="p-4 font-semibold text-center">Quantity</th>
+                                        <th className="p-4 font-semibold text-right">Total</th>
+                                        <th className="p-4 font-semibold text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {cartItems.map((item) => (
+                                        <tr key={item.id} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
+                                            <td className="p-4">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-16 h-16 rounded-lg border border-gray-100 bg-white flex items-center justify-center p-1 flex-shrink-0">
+                                                        <img src={item.image} alt={item.name} className="max-w-full max-h-full object-contain" />
+                                                    </div>
+                                                    <div>
+                                                        {item.badge && (
+                                                            <span className="text-[10px] font-bold text-primary uppercase tracking-wider mb-1 block">
+                                                                {item.badge}
+                                                            </span>
+                                                        )}
+                                                        <Link href="/product" className="text-sm font-semibold text-gray-900 hover:text-primary transition-colors line-clamp-2">
+                                                            {item.name}
+                                                        </Link>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="p-4 text-sm font-medium text-gray-900">
+                                                ${item.price.toFixed(2)}
+                                            </td>
+                                            <td className="p-4">
+                                                <div className="flex items-center justify-center border border-gray-200 rounded-lg overflow-hidden h-10 w-28 mx-auto bg-white">
+                                                    <button 
+                                                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                                        className="w-8 h-full flex items-center justify-center hover:bg-gray-50 text-gray-600 transition-colors"
+                                                    >
+                                                        <Minus className="w-3 h-3" />
+                                                    </button>
+                                                    <div className="flex-1 h-full flex items-center justify-center font-bold text-gray-900 text-sm border-x border-gray-200">
+                                                        {item.quantity}
+                                                    </div>
+                                                    <button 
+                                                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                                        className="w-8 h-full flex items-center justify-center hover:bg-gray-50 text-gray-600 transition-colors"
+                                                    >
+                                                        <Plus className="w-3 h-3" />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td className="p-4 text-right text-sm font-bold text-primary">
+                                                ${(item.price * item.quantity).toFixed(2)}
+                                            </td>
+                                            <td className="p-4 text-center">
+                                                <button 
+                                                    onClick={() => removeFromCart(item.id)}
+                                                    className="w-8 h-8 rounded-lg inline-flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            <div className="bg-gray-50 p-6 border-t border-gray-200 flex items-center justify-between">
+                                <Link href="/all-products">
+                                    <button className="text-sm font-semibold text-gray-600 hover:text-primary transition-colors">
+                                        ← Continue Shopping
+                                    </button>
+                                </Link>
+                                <div className="flex items-center gap-6">
+                                    <div className="text-right">
+                                        <p className="text-sm text-gray-500 mb-1">Subtotal</p>
+                                        <p className="text-2xl font-black text-gray-900">${cartTotal.toFixed(2)}</p>
+                                    </div>
+                                    <button className="h-12 px-8 bg-primary hover:bg-secondary text-white font-bold rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
+                                        Checkout
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* ── Tabs ── */}
                 <div className="flex items-center justify-center gap-6 border-b border-gray-200 mb-6">

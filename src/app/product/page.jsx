@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useCart } from "@/context/CartContext";
 import { 
   ShoppingCart, 
   Heart, 
@@ -46,6 +47,7 @@ export default function ProductDetailsPage() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
+  const { addToCart } = useCart();
   const [isZooming, setIsZooming] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
@@ -217,7 +219,18 @@ export default function ProductDetailsPage() {
                   </button>
                 </div>
                 
-                <button className="flex-1 h-14 bg-primary hover:bg-secondary text-white font-bold rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
+                <button 
+                  onClick={() => {
+                    addToCart({
+                      id: productData.id,
+                      name: productData.name,
+                      price: productData.price,
+                      image: productData.images[0],
+                      badge: productData.badge
+                    }, quantity);
+                    alert("Added to cart!");
+                  }}
+                  className="flex-1 h-14 bg-primary hover:bg-secondary text-white font-bold rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
                   <ShoppingCart className="w-5 h-5" />
                   Add To Cart
                 </button>
