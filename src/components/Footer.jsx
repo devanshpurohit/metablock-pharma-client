@@ -45,7 +45,7 @@ const FooterLink = ({ label, active = false }) => (
     <a
       href="#"
       className={`flex items-center gap-2 py-2.5 text-sm transition-colors duration-150 ${
-        active ? "text-red-500" : "text-gray-300 hover:text-white"
+        active ? "text-secondary" : "text-gray-300 hover:text-white"
       }`}
     >
       <span className="text-xs">›</span>
@@ -119,7 +119,7 @@ export default function Footer() {
                   onChange={(e) => setEmail(e.target.value)}
                   className="flex-1 bg-[#2a2a2a] text-gray-300 placeholder-gray-500 text-sm px-3 py-2.5 outline-none"
                 />
-                <button className="bg-white text-red-600 border-l border-gray-600 px-4 py-2.5 text-sm font-semibold flex items-center gap-1.5 hover:bg-gray-100 transition-colors">
+                <button className="bg-white text-primary border-l border-gray-600 px-4 py-2.5 text-sm font-semibold flex items-center gap-1.5 hover:bg-gray-100 transition-colors">
                   {/* Email icon */}
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -134,7 +134,7 @@ export default function Footer() {
                   type="checkbox"
                   checked={agreed}
                   onChange={(e) => setAgreed(e.target.checked)}
-                  className="w-4 h-4 accent-red-500 cursor-pointer"
+                  className="w-4 h-4 accent-secondary cursor-pointer"
                 />
                 <span className="text-gray-400 text-xs">
                   I have read and agree to the{" "}
@@ -178,7 +178,7 @@ export default function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="bg-[#c0392b] py-3 px-6 text-center">
+      <div className="bg-primary py-3 px-6 text-center">
         <p className="text-white text-sm font-medium">
           © 2025 All rights reserved.
         </p>

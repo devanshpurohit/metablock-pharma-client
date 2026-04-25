@@ -124,7 +124,7 @@ export default function SpecialProducts() {
     <div className="w-full bg-gray-50 py-4 font-sans">
 
       {/* ── Section Header ── */}
-      <div className="mx-4 mb-5 bg-gradient-to-r from-[#1a1a1a] via-[#2a2a2a] to-[#1a1a1a] rounded-xl px-8 py-5 flex items-center justify-center shadow-lg">
+      <div className="mx-4 mb-5 bg-gradient-to-r from-primary via-secondary to-primary rounded-xl px-8 py-5 flex items-center justify-center shadow-lg">
         <h2
           className="text-white font-bold text-2xl tracking-wide"
           style={{ fontFamily: "Georgia, serif" }}

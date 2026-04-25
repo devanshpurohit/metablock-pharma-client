@@ -96,28 +96,28 @@ export default function Navbar() {
       <div className="bg-[#111111] text-white text-xs py-1.5 overflow-hidden flex whitespace-nowrap w-full">
         <div className="animate-marquee flex items-center w-max hover:[animation-play-state:paused]">
           <div className="flex justify-around items-center w-screen px-4">
-            <span className="text-red-500 font-bold tracking-wide">2008</span>
+            <span className="text-secondary font-bold tracking-wide">2008</span>
             <span className="font-bold tracking-widest uppercase text-[11px]">
               Secure Payment &amp; Fast Shipping
             </span>
-            <span className="text-red-500 font-bold tracking-wide uppercase text-[11px]">
+            <span className="text-secondary font-bold tracking-wide uppercase text-[11px]">
               Official Reliable Steroid Shop!
             </span>
           </div>
           <div className="flex justify-around items-center w-screen px-4">
-            <span className="text-red-500 font-bold tracking-wide">2008</span>
+            <span className="text-secondary font-bold tracking-wide">2008</span>
             <span className="font-bold tracking-widest uppercase text-[11px]">
               Secure Payment &amp; Fast Shipping
             </span>
-            <span className="text-red-500 font-bold tracking-wide uppercase text-[11px]">
+            <span className="text-secondary font-bold tracking-wide uppercase text-[11px]">
               Official Reliable Steroid Shop!
             </span>
           </div>
         </div>
       </div>
 
-      {/* ── RED HEADER ── */}
-      <div className="bg-[#cc1111] px-4 py-3 flex items-center justify-between gap-4">
+      {/* ── PRIMARY HEADER ── */}
+      <div className="bg-primary px-4 py-3 flex items-center justify-between gap-4">
 
         {/* Logo */}
         <div className="flex-shrink-0">
@@ -164,18 +164,27 @@ export default function Navbar() {
 
           {/* Account / Favorites / Cart */}
           <div className="flex items-center gap-5 text-white text-xs">
-            <button className="flex flex-col items-center gap-0.5 hover:text-gray-200 transition-colors">
-              <User className="w-6 h-6" strokeWidth={1.5} />
-              <span>Account</span>
-            </button>
+            <div className="relative group cursor-pointer pb-2 -mb-2">
+              <div className="flex flex-col items-center gap-0.5 hover:text-gray-200 transition-colors">
+                <User className="w-6 h-6" strokeWidth={1.5} />
+                <span>Account</span>
+              </div>
+              {/* Dropdown Menu */}
+              <div className="absolute right-0 top-full opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="bg-white rounded-sm shadow-xl border border-gray-200 w-32 flex flex-col py-1 text-gray-800 text-sm">
+                  <a href="/login" className="px-4 py-2 hover:bg-gray-100 transition-colors text-left">Login</a>
+                  <a href="/register" className="px-4 py-2 hover:bg-gray-100 transition-colors text-left">Register</a>
+                </div>
+              </div>
+            </div>
             <button className="flex flex-col items-center gap-0.5 hover:text-gray-200 transition-colors">
               <Heart className="w-6 h-6" strokeWidth={1.5} />
               <span>Favorites</span>
             </button>
-            <button className="flex flex-col items-center gap-0.5 hover:text-gray-200 transition-colors">
+            <a href="/cart" className="flex flex-col items-center gap-0.5 hover:text-gray-200 transition-colors">
               <ShoppingBag className="w-6 h-6" strokeWidth={1.5} />
               <span>Cart</span>
-            </button>
+            </a>
           </div>
 
         </div>
@@ -186,14 +195,14 @@ export default function Navbar() {
 
         {/* All Categories */}
         <div className="group">
-          <button className="flex items-center gap-1.5 bg-[#cc1111] group-hover:bg-white group-hover:text-black transition-colors px-4 py-3 font-semibold whitespace-nowrap h-full cursor-pointer">
+          <button className="flex items-center gap-1.5 bg-primary group-hover:bg-white group-hover:text-black transition-colors px-4 py-3 font-semibold whitespace-nowrap h-full cursor-pointer">
             <Menu className="w-4 h-4" />
             All Categories
-            <ChevronDown className="w-3 h-3 group-hover:text-red-500 group-hover:rotate-180 transition-transform duration-200" />
+            <ChevronDown className="w-3 h-3 group-hover:text-secondary group-hover:rotate-180 transition-transform duration-200" />
           </button>
           
           {/* ── ALL CATEGORIES MEGA MENU ── */}
-          <div className="absolute left-0 top-full w-full bg-white text-gray-800 py-6 px-8 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 shadow-xl border-t-[3px] border-[#cc1111] translate-y-2 group-hover:translate-y-0 cursor-default max-h-[85vh] overflow-y-auto">
+          <div className="absolute left-0 top-full w-full bg-white text-gray-800 py-6 px-8 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 shadow-xl border-t-[3px] border-primary translate-y-2 group-hover:translate-y-0 cursor-default max-h-[85vh] overflow-y-auto">
             <div className="grid grid-cols-4 gap-8">
               {megaMenuColumns.map((col, colIdx) => (
                 <div key={colIdx} className="flex flex-col gap-6">
@@ -203,7 +212,7 @@ export default function Navbar() {
                         <ul className="flex flex-col gap-6 font-bold text-[13px] text-gray-700">
                           {section.items.map((item, i) => (
                             <li key={i}>
-                              <a href="#" className="hover:text-red-500 transition-colors">
+                              <a href="#" className="hover:text-secondary transition-colors">
                                 {item}
                               </a>
                             </li>
@@ -215,7 +224,7 @@ export default function Navbar() {
                           <ul className="flex flex-col gap-3 text-[12px] text-gray-500">
                             {section.items.map((item, i) => (
                               <li key={i}>
-                                <a href="#" className="flex items-center gap-1.5 hover:text-red-500 transition-colors">
+                                <a href="#" className="flex items-center gap-1.5 hover:text-secondary transition-colors">
                                   <span className="text-gray-400 text-[10px]">›</span> {item}
                                 </a>
                               </li>
@@ -240,7 +249,7 @@ export default function Navbar() {
           </button>
 
           {/* ── BRAND CAROUSEL (Mega Menu) ── */}
-          <div className="absolute left-0 top-full w-full bg-white py-4 px-2 flex items-center gap-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 shadow-xl border-t-[3px] border-[#cc1111] translate-y-2 group-hover:translate-y-0">
+          <div className="absolute left-0 top-full w-full bg-white py-4 px-2 flex items-center gap-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 shadow-xl border-t-[3px] border-primary translate-y-2 group-hover:translate-y-0">
             {/* Left Arrow */}
             <button
               onClick={handlePrev}
@@ -260,7 +269,7 @@ export default function Navbar() {
                   {/* Circle Logo */}
                   <div
                     className={`relative w-16 h-16 rounded-full border-2 ${brand.border || 'border-gray-200'} flex items-center justify-center
-                      group-hover/brand:border-[#cc1111] transition-colors shadow-sm overflow-hidden bg-white ${brand.bg}`}
+                      group-hover/brand:border-primary transition-colors shadow-sm overflow-hidden bg-white ${brand.bg}`}
                   >
                     {brand.image && (
                       <img src={brand.image} alt={brand.name} className="w-full h-full object-contain p-1.5" />
@@ -269,7 +278,7 @@ export default function Navbar() {
 
                   {/* Brand Name */}
                   <div className="text-center">
-                    <p className="text-xs font-semibold text-gray-800 leading-tight group-hover/brand:text-[#cc1111] transition-colors">
+                    <p className="text-xs font-semibold text-gray-800 leading-tight group-hover/brand:text-primary transition-colors">
                       {brand.name}
                     </p>
                     <p className="text-xs text-gray-500">{brand.country}</p>
@@ -290,16 +299,16 @@ export default function Navbar() {
         </div>
 
         {/* All Products */}
-        <button className="flex items-center gap-1.5 px-4 py-3 hover:bg-[#333333] transition-colors whitespace-nowrap border-l border-[#444]">
+        <a href="/all-products" className="flex items-center gap-1.5 px-4 py-3 hover:bg-[#333333] transition-colors whitespace-nowrap border-l border-[#444]">
           <Hand className="w-4 h-4" />
           All Products
-        </button>
+        </a>
 
         {/* Shipping */}
-        <button className="flex items-center gap-1.5 px-4 py-3 hover:bg-[#333333] transition-colors whitespace-nowrap border-l border-[#444]">
+        <a href="/shipping" className="flex items-center gap-1.5 px-4 py-3 hover:bg-[#333333] transition-colors whitespace-nowrap border-l border-[#444]">
           <Truck className="w-4 h-4" />
           Shipping
-        </button>
+        </a>
 
         {/* Why Pharma? */}
         <button className="flex items-center gap-1.5 px-4 py-3 hover:bg-[#333333] transition-colors whitespace-nowrap border-l border-[#444]">

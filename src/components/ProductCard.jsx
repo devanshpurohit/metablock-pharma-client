@@ -1,4 +1,5 @@
 import { ShoppingCart, Heart, Crown, Truck } from "lucide-react";
+import Link from "next/link";
 
 // ─── Star Rating ──────────────────────────────────────────────────────────────
 function StarRating({ rating = 0, max = 5 }) {
@@ -36,7 +37,7 @@ function OriginalBadge() {
 // ─── Top Seller Badge ─────────────────────────────────────────────────────────
 function TopSellerBadge() {
   return (
-    <div className="absolute bottom-3 right-3 flex items-center gap-1.5 bg-[#cc1111] text-white text-[10px] font-black px-2.5 py-1.5 rounded shadow-md z-10">
+    <div className="absolute bottom-3 right-3 flex items-center gap-1.5 bg-primary text-white text-[10px] font-black px-2.5 py-1.5 rounded shadow-md z-10">
       <Crown className="w-3 h-3 fill-white" />
       <span className="tracking-wide">TOP SELLER</span>
     </div>
@@ -81,7 +82,7 @@ export default function ProductCard({
       </div>
 
       {/* ── Product Image Area ── */}
-      <div className="relative flex items-center justify-center px-4 py-4 min-h-[220px]">
+      <Link href="/product" className="relative flex items-center justify-center px-4 py-4 min-h-[220px]">
         {isOriginal && <OriginalBadge />}
 
         {image ? (
@@ -93,14 +94,16 @@ export default function ProductCard({
         )}
 
         {isTopSeller && <TopSellerBadge />}
-      </div>
+      </Link>
 
       {/* ── Info ── */}
       <div className="px-3 pb-4 flex flex-col gap-2 flex-1">
         {/* Brand */}
         <p className="text-gray-500 text-sm">{brand}</p>
         {/* Product Name */}
-        <p className="text-gray-900 font-semibold text-sm leading-snug">{name}</p>
+        <Link href="/product">
+          <p className="text-gray-900 font-semibold text-sm leading-snug hover:text-primary transition-colors">{name}</p>
+        </Link>
         {/* Stars */}
         <StarRating rating={rating} />
         {/* Price */}
@@ -112,14 +115,14 @@ export default function ProductCard({
         <div className="flex items-center gap-2 mt-auto pt-1">
           <button
             onClick={onAddToCart}
-            className="flex-1 flex items-center justify-center gap-2 bg-white border-2 border-[#cc1111] text-[#cc1111] hover:bg-[#cc1111] hover:text-white font-bold text-sm py-2.5 rounded transition-colors duration-200"
+            className="flex-1 flex items-center justify-center gap-2 bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white font-bold text-sm py-2.5 rounded transition-colors duration-200"
           >
             <ShoppingCart className="w-4 h-4" />
             Add To Cart
           </button>
           <button
             onClick={onFavorite}
-            className="w-10 h-10 flex items-center justify-center border-2 border-gray-200 rounded hover:border-red-400 hover:text-red-500 text-gray-400 transition-colors duration-200 flex-shrink-0"
+            className="w-10 h-10 flex items-center justify-center border-2 border-gray-200 rounded hover:border-secondary hover:text-secondary text-gray-400 transition-colors duration-200 flex-shrink-0"
           >
             <Heart className="w-4 h-4" />
           </button>

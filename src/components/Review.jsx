@@ -7,7 +7,7 @@ function Stars({ count = 5 }) {
       {Array.from({ length: 5 }).map((_, i) => (
         <svg
           key={i}
-          className={`w-4 h-4 ${i < count ? "text-orange-400" : "text-gray-300"}`}
+          className={`w-4 h-4 ${i < count ? "text-primary" : "text-gray-300"}`}
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -54,13 +54,13 @@ function ReviewCard({ review }) {
     <div className="relative bg-white rounded-2xl shadow-md border border-gray-100 p-6 flex flex-col items-center gap-3 hover:shadow-lg transition-shadow duration-200">
 
       {/* Popular Review Badge */}
-      <div className="absolute top-4 left-4 bg-orange-500 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow">
+      <div className="absolute top-4 left-4 bg-primary text-white text-[11px] font-bold px-3 py-1 rounded-full shadow">
         Popular Review
       </div>
 
       {/* Avatar Circle */}
-      <div className="w-16 h-16 rounded-full border-2 border-orange-400 bg-orange-50 flex items-center justify-center mt-4">
-        <User className="w-8 h-8 text-orange-400" strokeWidth={1.5} />
+      <div className="w-16 h-16 rounded-full border-2 border-secondary bg-accent flex items-center justify-center mt-4">
+        <User className="w-8 h-8 text-secondary" strokeWidth={1.5} />
       </div>
 
       {/* Name */}
@@ -99,7 +99,7 @@ export default function CustomerReviews() {
       {/* ── Header ── */}
       <div className="text-center mb-8">
         <h2
-          className="text-3xl font-black text-gray-900 tracking-widest inline-block pb-2 border-b-4 border-orange-500"
+          className="text-3xl font-black text-gray-900 tracking-widest inline-block pb-2 border-b-4 border-primary"
           style={{ fontFamily: "Georgia, serif", letterSpacing: "0.15em" }}
         >
           CUSTOMER REVIEWS
@@ -118,7 +118,7 @@ export default function CustomerReviews() {
 
       {/* ── View All Button ── */}
       <div className="flex justify-center mt-10">
-        <button className="bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm px-8 py-3 rounded-full shadow-lg transition-colors duration-200 tracking-wide">
+        <button className="bg-primary hover:bg-secondary text-white font-bold text-sm px-8 py-3 rounded-full shadow-lg transition-colors duration-200 tracking-wide">
           View All Reviews
         </button>
       </div>
