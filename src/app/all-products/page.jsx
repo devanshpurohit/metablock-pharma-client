@@ -78,6 +78,42 @@ const allProducts = [
   },
 ];
 
+const dummyNames = [
+  "Clenbuterol 40mcg Pharmaqo",
+  "Winstrol 50mg Xeno Labs",
+  "Deca Durabolin 300 Beligas",
+  "Sustanon 250 Ultima Pharma",
+  "Trenbolone Enanthate 200 Evolve",
+  "Masteron Propionate 100 PeptidePlus",
+  "Proviron 25mg Pharmaqo",
+  "Anadrol 50mg Xeno Labs",
+  "Halotestin 10mg Beligas",
+  "Primobolan Depot 100 Ultima",
+  "Boldenone Undecylenate 300",
+  "NPP 100mg Evolve BioLabs"
+];
+
+const additionalProducts = Array.from({ length: 12 }).map((_, i) => ({
+  id: i + 9,
+  badge: i % 2 === 0 ? "USA DOMESTIC" : "INTERNATIONAL SHIPMENT",
+  name: dummyNames[i],
+  price: Math.floor(Math.random() * 150) + 30,
+  rating: Math.floor(Math.random() * 2) + 4,
+  topSeller: i % 3 === 0,
+  image: allProducts[Math.floor(Math.random() * 8)].image
+}));
+allProducts.push(...additionalProducts);
+
+// Shuffle images
+const allImages = allProducts.map(p => p.image);
+for (let i = allImages.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [allImages[i], allImages[j]] = [allImages[j], allImages[i]];
+}
+allProducts.forEach((p, i) => {
+  p.image = allImages[i];
+});
+
 const subcategories = [
   "Anabolic Steroids",
   "Injectable Steroids",
@@ -199,7 +235,7 @@ export default function AllProductsPage() {
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [sortBy, setSortBy] = useState("default");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4; // Set to 4 to demonstrate pagination with 8 products
+  const itemsPerPage = 20; // Set to 20 products per page as requested
 
   // Reset to first page when filters change
   useEffect(() => {
