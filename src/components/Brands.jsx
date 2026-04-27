@@ -200,7 +200,7 @@ export default function Brands() {
         </button>
 
         {/* Brands */}
-        <div className="flex flex-1 items-start justify-around">
+        <div className="flex flex-1 items-start justify-start md:justify-around overflow-x-auto scrollbar-hide gap-4 md:gap-0 px-2 md:px-0">
           {visibleBrands.map((brand, i) => (
             <div
               key={carouselStart + i}
@@ -235,17 +235,17 @@ export default function Brands() {
       </div>
 
       {/* ── TAB BUTTONS ── */}
-      <div className="flex items-stretch gap-0 px-4 mt-6">
+      <div className="flex flex-col md:flex-row items-stretch gap-2 md:gap-0 px-4 mt-6">
         {tabs.map((tab, idx) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`
               flex-1 flex items-center justify-center gap-2 py-4 px-6
-              font-bold text-lg border transition-all duration-200
+              font-bold text-base md:text-lg border transition-all duration-200 rounded-md md:rounded-none
               ${activeTab === tab.id ? `${tab.activeBg} ${tab.border} ${tab.text}` : `${tab.bg} border-transparent ${tab.text} opacity-80`}
-              ${idx === 0 ? "rounded-l-md" : ""}
-              ${idx === tabs.length - 1 ? "rounded-r-md" : ""}
+              ${idx === 0 ? "md:rounded-l-md" : ""}
+              ${idx === tabs.length - 1 ? "md:rounded-r-md" : ""}
               hover:opacity-100
             `}
             style={{ fontFamily: "Georgia, serif" }}
@@ -257,7 +257,7 @@ export default function Brands() {
       </div>
 
       {/* ── SHIPPING BANNERS ── */}
-      <div className="grid grid-cols-4 gap-3 px-4 mt-6 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 px-4 mt-6 mb-6">
         {shippingBanners.map((banner) => (
           <div
             key={banner.type}

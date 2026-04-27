@@ -61,11 +61,11 @@ export default function HeroSlider() {
       >
         {slides.map((slide) => (
           <SwiperSlide key={slide.id}>
-            <div className="relative w-full flex items-center justify-center bg-gray-50">
+            <div className="relative w-full h-[180px] sm:h-[250px] md:h-auto md:aspect-[3/1] flex items-center justify-center bg-gray-50 overflow-hidden">
               <img 
                 src={slide.image} 
                 alt={`Banner ${slide.id}`} 
-                className="w-full h-auto block"
+                className="w-full h-full object-cover block"
               />
             </div>
           </SwiperSlide>

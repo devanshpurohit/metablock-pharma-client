@@ -18,6 +18,7 @@ import {
   Star,
   CreditCard,
   Info,
+  X,
 } from "lucide-react";
 
 // Brand data
@@ -77,6 +78,7 @@ const megaMenuColumns = [
 export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [carouselStart, setCarouselStart] = useState(0);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const visibleCount = 9;
 
   const handlePrev = () =>
@@ -117,21 +119,32 @@ export default function Navbar() {
       </div>
 
       {/* ── PRIMARY HEADER ── */}
-      <div className="bg-primary px-4 py-3 flex items-center justify-between gap-4">
+      <div className="bg-primary px-4 py-3 flex flex-wrap md:flex-nowrap items-center justify-between gap-4 relative z-[60]">
 
-        {/* Logo */}
-        <div className="flex-shrink-0">
+        {/* Mobile Hamburger & Logo */}
+        <div className="flex items-center gap-2 md:gap-4">
+          <button 
+            className="md:hidden text-white p-1 hover:bg-white/10 rounded-sm transition-colors"
+            onClick={() => setIsMobileMenuOpen(true)}
+          >
+            <Menu className="w-6 h-6" />
+          </button>
           <a
             href="/"
-            className="text-white font-extrabold text-3xl select-none flex items-center gap-1"
+            className="text-white font-extrabold text-2xl md:text-3xl select-none flex items-center gap-1"
             style={{ fontFamily: "Georgia, serif", letterSpacing: "-1px" }}
           >
             PHARMA
           </a>
         </div>
 
+        {/* Mobile Cart Icon (Visible only on mobile) */}
+        <a href="/cart" className="md:hidden text-white p-1 hover:bg-white/10 rounded-sm transition-colors">
+          <ShoppingBag className="w-6 h-6" />
+        </a>
+
         {/* Search Bar */}
-        <div className="flex-1 max-w-2xl">
+        <div className="w-full md:flex-1 max-w-2xl order-3 md:order-none mt-2 md:mt-0">
           <div className="flex items-center bg-white rounded-sm overflow-hidden">
             <input
               type="text"
@@ -147,7 +160,7 @@ export default function Navbar() {
         </div>
 
         {/* Right: Currency + Contact + Account Icons */}
-        <div className="flex-shrink-0 flex flex-col items-end gap-2">
+        <div className="hidden md:flex flex-shrink-0 flex-col items-end gap-2">
 
           {/* Currency + Contact */}
           <div className="flex items-center gap-4 text-white text-xs">
@@ -190,8 +203,8 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ── NAV BAR ── */}
-      <div className="bg-[#222222] text-white text-sm flex items-center relative">
+      {/* ── NAV BAR (Desktop) ── */}
+      <div className="hidden md:flex bg-[#222222] text-white text-sm items-center relative">
 
         {/* All Categories */}
         <div className="group">
@@ -330,6 +343,68 @@ export default function Navbar() {
         </button>
 
       </div>
+
+      {/* ── MOBILE MENU SIDEBAR ── */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-[100] md:hidden">
+          {/* Overlay */}
+          <div 
+            className="absolute inset-0 bg-black/50 transition-opacity" 
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          
+          {/* Sidebar */}
+          <div className="absolute top-0 left-0 bottom-0 w-4/5 max-w-sm bg-white shadow-2xl flex flex-col transform transition-transform overflow-y-auto">
+            {/* Header */}
+            <div className="bg-primary p-4 flex items-center justify-between text-white">
+              <span className="font-extrabold text-2xl" style={{ fontFamily: "Georgia, serif", letterSpacing: "-1px" }}>PHARMA</span>
+              <button onClick={() => setIsMobileMenuOpen(false)} className="p-1 hover:bg-white/10 rounded-sm">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            {/* Menu Items */}
+            <div className="flex flex-col py-2">
+              <a href="/login" className="px-5 py-3 border-b border-gray-100 flex items-center gap-3 text-gray-700 hover:bg-gray-50 font-medium">
+                <User className="w-5 h-5 text-gray-400" /> Account
+              </a>
+              <a href="/all-products" className="px-5 py-3 border-b border-gray-100 flex items-center gap-3 text-gray-700 hover:bg-gray-50 font-medium">
+                <Hand className="w-5 h-5 text-gray-400" /> All Products
+              </a>
+              <a href="/shipping" className="px-5 py-3 border-b border-gray-100 flex items-center gap-3 text-gray-700 hover:bg-gray-50 font-medium">
+                <Truck className="w-5 h-5 text-gray-400" /> Shipping
+              </a>
+              
+              {/* Categories */}
+              <div className="px-5 py-4 bg-gray-50 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                Categories
+              </div>
+              {megaMenuColumns.flat().map((section, idx) => (
+                <div key={idx} className="flex flex-col">
+                  {section.isStandalone ? (
+                    section.items.map((item, i) => (
+                      <a key={i} href="#" className="px-5 py-3 border-b border-gray-100 text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors text-sm">
+                        {item}
+                      </a>
+                    ))
+                  ) : (
+                    <div className="flex flex-col">
+                      <div className="px-5 py-3 bg-gray-100 border-b border-gray-200 text-gray-800 font-semibold text-sm">
+                        {section.title}
+                      </div>
+                      {section.items.map((item, i) => (
+                        <a key={i} href="#" className="px-5 py-2.5 border-b border-gray-50 text-gray-600 hover:bg-gray-50 hover:text-primary transition-colors text-sm pl-8">
+                          {item}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

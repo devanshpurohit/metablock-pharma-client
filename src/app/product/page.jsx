@@ -177,7 +177,7 @@ export default function ProductDetailsPage() {
             </div>
 
             {/* Short Info */}
-            <div className="grid grid-cols-2 gap-4 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
               <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary shadow-sm">
                   <ShieldCheck className="w-5 h-5" />
@@ -200,15 +200,15 @@ export default function ProductDetailsPage() {
 
             {/* Actions */}
             <div className="flex flex-col gap-6 mb-8">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden h-14">
+              <div className="flex flex-wrap sm:flex-nowrap items-center gap-4">
+                <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden h-14 w-full sm:w-auto">
                   <button 
                     onClick={decrementQty}
                     className="w-12 h-full flex items-center justify-center hover:bg-gray-50 text-gray-600 transition-colors"
                   >
                     <Minus className="w-4 h-4" />
                   </button>
-                  <div className="w-12 h-full flex items-center justify-center font-bold text-gray-900 border-x border-gray-200">
+                  <div className="flex-1 sm:w-12 h-full flex items-center justify-center font-bold text-gray-900 border-x border-gray-200">
                     {quantity}
                   </div>
                   <button 
@@ -235,7 +235,7 @@ export default function ProductDetailsPage() {
                   Add To Cart
                 </button>
                 
-                <button className="w-14 h-14 rounded-xl border border-gray-200 flex items-center justify-center text-gray-400 hover:text-red-500 hover:border-red-100 hover:bg-red-50 transition-all group">
+                <button className="w-14 h-14 shrink-0 rounded-xl border border-gray-200 flex items-center justify-center text-gray-400 hover:text-red-500 hover:border-red-100 hover:bg-red-50 transition-all group">
                   <Heart className="w-6 h-6 group-hover:fill-red-500 transition-colors" />
                 </button>
               </div>
@@ -263,7 +263,7 @@ export default function ProductDetailsPage() {
 
         {/* ── Tabs Section ── */}
         <div className="mb-20">
-          <div className="flex items-center gap-10 border-b border-gray-100 mb-8">
+          <div className="flex items-center gap-6 sm:gap-10 border-b border-gray-100 mb-8 overflow-x-auto scrollbar-hide whitespace-nowrap pb-1">
             {["Description", "Specifications", "Shipping & Returns"].map((tab) => (
               <button
                 key={tab}
@@ -294,8 +294,8 @@ export default function ProductDetailsPage() {
             {activeTab === "specifications" && (
               <div className="animate-in slide-in-from-left-4 duration-500 overflow-hidden rounded-2xl border border-gray-100">
                 {productData.specs.map((spec, i) => (
-                  <div key={i} className={`flex p-4 ${i % 2 === 0 ? "bg-white" : "bg-gray-50"}`}>
-                    <span className="w-1/3 text-sm font-bold text-gray-500 uppercase tracking-wider">{spec.label}</span>
+                  <div key={i} className={`flex flex-col sm:flex-row p-4 gap-1 sm:gap-4 ${i % 2 === 0 ? "bg-white" : "bg-gray-50"}`}>
+                    <span className="w-full sm:w-1/3 text-xs sm:text-sm font-bold text-gray-500 uppercase tracking-wider">{spec.label}</span>
                     <span className="flex-1 text-sm font-semibold text-gray-900">{spec.value}</span>
                   </div>
                 ))}

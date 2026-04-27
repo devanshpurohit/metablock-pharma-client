@@ -139,7 +139,7 @@ export default function SpecialProducts() {
         {/* Left Arrow */}
         <button
           onClick={scrollLeft}
-          className="absolute -left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-[#1a1a1a] hover:bg-[#333] text-white rounded-full flex items-center justify-center shadow-lg transition-colors"
+          className="hidden md:flex absolute -left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-[#1a1a1a] hover:bg-[#333] text-white rounded-full items-center justify-center shadow-lg transition-colors"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
@@ -168,7 +168,7 @@ export default function SpecialProducts() {
         {/* Right Arrow */}
         <button
           onClick={scrollRight}
-          className="absolute -right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-[#1a1a1a] hover:bg-[#333] text-white rounded-full flex items-center justify-center shadow-lg transition-colors"
+          className="hidden md:flex absolute -right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-[#1a1a1a] hover:bg-[#333] text-white rounded-full items-center justify-center shadow-lg transition-colors"
         >
           <ChevronRight className="w-5 h-5" />
         </button>

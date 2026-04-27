@@ -235,6 +235,7 @@ export default function AllProductsPage() {
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [sortBy, setSortBy] = useState("default");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const itemsPerPage = 20; // Set to 20 products per page as requested
 
   // Reset to first page when filters change
@@ -285,11 +286,39 @@ export default function AllProductsPage() {
         <span className="text-gray-800">All Products</span>
       </div>
 
-      <div className="flex gap-0">
+      <div className="flex flex-col md:flex-row gap-0">
+        
+        {/* Mobile Header (Title + Filter Toggle) */}
+        <div className="md:hidden px-4 py-4 flex items-center justify-between border-b border-gray-100">
+          <h1 className="text-xl font-normal text-gray-800">All Products</h1>
+          <button
+            onClick={() => setIsMobileFilterOpen(true)}
+            className="flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-sm text-sm font-semibold transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+            Filters
+          </button>
+        </div>
+
         {/* ── LEFT SIDEBAR ── */}
-        <aside className="w-60 shrink-0 px-4 py-5 border-r border-gray-200 min-h-screen">
-          {/* Filter Header */}
-          <div className="flex items-center justify-between mb-3">
+        <aside className={`
+          ${isMobileFilterOpen ? 'fixed inset-0 z-[100] overflow-y-auto bg-white block' : 'hidden'}
+          md:block md:static md:w-60 shrink-0 px-4 py-5 border-r border-gray-200 md:min-h-screen
+        `}>
+          {/* Mobile Filter Close Header */}
+          <div className="flex md:hidden items-center justify-between mb-6 pb-4 border-b border-gray-200">
+            <h2 className="text-lg font-bold text-gray-900">Filters</h2>
+            <button onClick={() => setIsMobileFilterOpen(false)} className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Filter Header (Desktop) */}
+          <div className="hidden md:flex items-center justify-between mb-3">
             <h2 className="text-base font-bold text-gray-900">Filter</h2>
             <button
               onClick={clearFilters}
@@ -413,18 +442,18 @@ export default function AllProductsPage() {
         </aside>
 
         {/* ── RIGHT CONTENT ── */}
-        <main className="flex-1 px-6 py-5">
+        <main className="flex-1 px-4 md:px-6 py-5">
           {/* Page Title */}
-          <h1 className="text-2xl font-normal text-gray-800 mb-5">All Products</h1>
+          <h1 className="text-2xl font-normal text-gray-800 mb-5 hidden md:block">All Products</h1>
 
           {/* Sort Bar */}
-          <div className="flex items-center justify-end gap-3 mb-6 border-b border-gray-100 pb-4">
-            <span className="text-sm text-gray-600">Sort By:</span>
-            <div className="relative">
+          <div className="flex sm:items-center justify-between sm:justify-end gap-3 mb-6 border-b border-gray-100 pb-4">
+            <span className="text-sm text-gray-600 hidden sm:inline">Sort By:</span>
+            <div className="relative w-full sm:w-auto">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="appearance-none border border-gray-300 rounded-sm px-3 py-1.5 pr-7 text-sm text-gray-700 outline-none bg-white cursor-pointer"
+                className="w-full sm:w-auto appearance-none border border-gray-300 rounded-sm px-3 py-2 sm:py-1.5 pr-8 text-sm text-gray-700 outline-none bg-white cursor-pointer shadow-sm sm:shadow-none"
               >
                 <option value="default">Default</option>
                 <option value="price-asc">Price: Low to High</option>
