@@ -9,7 +9,7 @@ export function CartProvider({ children }) {
 
     // Load from local storage
     useEffect(() => {
-        const stored = localStorage.getItem('pharma_cart');
+        const stored = localStorage.getItem('roidspharma_cart');
         if (stored) {
             try {
                 setCartItems(JSON.parse(stored));
@@ -23,7 +23,7 @@ export function CartProvider({ children }) {
     // Save to local storage
     useEffect(() => {
         if (isLoaded) {
-            localStorage.setItem('pharma_cart', JSON.stringify(cartItems));
+            localStorage.setItem('roidspharma_cart', JSON.stringify(cartItems));
         }
     }, [cartItems, isLoaded]);
 

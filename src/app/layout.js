@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Pharma",
+  title: "Roidspharma",
   description: "Official Reliable Steroid Shop! Secure Payment & Fast Shipping",
 };
 

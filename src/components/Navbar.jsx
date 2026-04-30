@@ -131,10 +131,14 @@ export default function Navbar() {
           </button>
           <a
             href="/"
-            className="text-white font-extrabold text-2xl md:text-3xl select-none flex items-center gap-1"
+            className="text-white font-extrabold text-2xl md:text-3xl select-none flex items-center gap-2"
             style={{ fontFamily: "Georgia, serif", letterSpacing: "-1px" }}
           >
-            PHARMA
+            <img 
+              src="/assets/pharma.png" 
+              alt="Roidspharma Logo" 
+              className="h-16 md:h-24 w-auto object-contain"
+            />
           </a>
         </div>
 
@@ -323,10 +327,10 @@ export default function Navbar() {
           Shipping
         </a>
 
-        {/* Why Pharma? */}
+        {/* Why Roidspharma? */}
         <button className="flex items-center gap-1.5 px-4 py-3 hover:bg-[#333333] transition-colors whitespace-nowrap border-l border-[#444]">
           <Star className="w-4 h-4" />
-          Why Pharma?
+          Why Roidspharma?
         </button>
 
         {/* Payment */}
@@ -357,7 +361,9 @@ export default function Navbar() {
           <div className="absolute top-0 left-0 bottom-0 w-4/5 max-w-sm bg-white shadow-2xl flex flex-col transform transition-transform overflow-y-auto">
             {/* Header */}
             <div className="bg-primary p-4 flex items-center justify-between text-white">
-              <span className="font-extrabold text-2xl" style={{ fontFamily: "Georgia, serif", letterSpacing: "-1px" }}>PHARMA</span>
+              <span className="flex items-center">
+                <img src="/assets/pharma.png" alt="Roidspharma Logo" className="h-16 w-auto object-contain" />
+              </span>
               <button onClick={() => setIsMobileMenuOpen(false)} className="p-1 hover:bg-white/10 rounded-sm">
                 <X className="w-6 h-6" />
               </button>
