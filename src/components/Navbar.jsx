@@ -131,11 +131,11 @@ export default function Navbar() {
           </button>
           <a
             href="/"
-            className="text-white font-extrabold text-2xl md:text-3xl select-none flex items-center gap-2"
+            className="hidden md:flex text-white font-extrabold text-2xl md:text-3xl select-none items-center gap-2"
             style={{ letterSpacing: "-1px" }}
           >
             <img 
-              src="/assets/pharma.png" 
+              src="/assets/logo.png" 
               alt="Roidspharma Logo" 
               className="h-16 md:h-24 w-auto object-contain"
             />
@@ -361,9 +361,9 @@ export default function Navbar() {
           <div className="absolute top-0 left-0 bottom-0 w-4/5 max-w-sm bg-white shadow-2xl flex flex-col transform transition-transform overflow-y-auto">
             {/* Header */}
             <div className="bg-primary p-4 flex items-center justify-between text-white">
-              <span className="flex items-center">
-                <img src="/assets/pharma.png" alt="Roidspharma Logo" className="h-16 w-auto object-contain" />
-              </span>
+              <a href="/" className="flex items-center">
+                <img src="/assets/logo.png" alt="Roidspharma Logo" className="h-16 w-auto object-contain" />
+              </a>
               <button onClick={() => setIsMobileMenuOpen(false)} className="p-1 hover:bg-white/10 rounded-sm">
                 <X className="w-6 h-6" />
               </button>
