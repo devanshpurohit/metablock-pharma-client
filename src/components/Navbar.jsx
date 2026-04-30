@@ -132,7 +132,7 @@ export default function Navbar() {
           <a
             href="/"
             className="text-white font-extrabold text-2xl md:text-3xl select-none flex items-center gap-2"
-            style={{ fontFamily: "Georgia, serif", letterSpacing: "-1px" }}
+            style={{ letterSpacing: "-1px" }}
           >
             <img 
               src="/assets/pharma.png" 

@@ -9,11 +9,11 @@ import "swiper/css/pagination";
 const slides = [
   {
     id: 1,
-    image: "https://www.getroids1.net/image/cache/catalog/BRAND%20LOGOS/35sp-4800x1600.jpg.webp",
+    image: "/assets/ban.png",
   },
   {
     id: 2,
-    image: "https://www.getroids1.net/image/cache/catalog/BLOG/pplus-30-4800x1600.jpg.webp",
+    image: "/assets/ban1.png",
   },
   
 ];
@@ -65,7 +65,7 @@ export default function HeroSlider() {
               <img 
                 src={slide.image} 
                 alt={`Banner ${slide.id}`} 
-                className="w-full h-full object-cover block"
+                className="w-full h-full object-fill block"
               />
             </div>
           </SwiperSlide>

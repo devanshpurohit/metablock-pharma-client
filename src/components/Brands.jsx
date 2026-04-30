@@ -248,7 +248,6 @@ export default function Brands() {
               ${idx === tabs.length - 1 ? "md:rounded-r-md" : ""}
               hover:opacity-100
             `}
-            style={{ fontFamily: "Georgia, serif" }}
           >
             {tab.icon}
             <span>{tab.label}</span>

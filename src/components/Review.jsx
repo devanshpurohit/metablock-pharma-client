@@ -99,8 +99,7 @@ export default function CustomerReviews() {
       {/* ── Header ── */}
       <div className="text-center mb-8">
         <h2
-          className="text-3xl font-black text-gray-900 tracking-widest inline-block pb-2 border-b-4 border-primary"
-          style={{ fontFamily: "Georgia, serif", letterSpacing: "0.15em" }}
+          className="text-3xl font-black text-gray-900 tracking-[0.15em] inline-block pb-2 border-b-4 border-primary uppercase"
         >
           CUSTOMER REVIEWS
         </h2>

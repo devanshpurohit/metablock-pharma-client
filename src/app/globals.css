@@ -6,7 +6,7 @@
   --color-primary: #1565C0;
   --color-secondary: #42A5F5;
   --color-accent: #E3F2FD;
-  --font-sans: 'Dosis', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-dosis), ui-sans-serif, system-ui, sans-serif;
 
   @keyframes marquee {
     0% { transform: translateX(0%); }
