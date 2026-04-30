@@ -180,7 +180,7 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div className="bg-primary py-3 px-6 text-center">
         <p className="text-white text-sm font-medium">
-          © 2025 All rights reserved.
+          © 2026 All rights reserved.
         </p>
       </div>
     </footer>
