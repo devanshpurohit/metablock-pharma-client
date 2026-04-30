@@ -208,14 +208,14 @@ export default function Brands() {
             >
               {/* Circle */}
               <div className={`relative w-[72px] h-[72px] rounded-full border-2 ${brand.border} ${brand.bg}
-                flex items-center justify-center shadow-sm group-hover:border-red-400 transition-colors overflow-hidden bg-white`}>
+                flex items-center justify-center shadow-sm group-hover:border-primary transition-colors overflow-hidden bg-white`}>
                 {brand.image && (
                   <img src={brand.image} alt={brand.name} className="w-full h-full object-contain p-1.5" />
                 )}
               </div>
               {/* Name */}
               <div className="text-center leading-tight">
-                <p className="text-[11px] font-semibold text-gray-800 group-hover:text-red-600 transition-colors">
+                <p className="text-[11px] font-semibold text-gray-800 group-hover:text-primary transition-colors">
                   {brand.name}
                 </p>
                 <p className="text-[11px] text-gray-500">{brand.country}</p>

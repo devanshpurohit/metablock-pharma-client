@@ -133,12 +133,12 @@ export default function SpecialProducts() {
       </div>
 
       {/* ── Cards Row with Navigation ── */}
-      <div className="relative mx-4">
+      <div className="relative max-w-7xl mx-auto px-4">
 
         {/* Left Arrow */}
         <button
           onClick={scrollLeft}
-          className="hidden md:flex absolute -left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-[#1a1a1a] hover:bg-[#333] text-white rounded-full items-center justify-center shadow-lg transition-colors"
+          className="hidden md:flex absolute -left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-[#1a1a1a] hover:bg-[#333] text-white rounded-full items-center justify-center shadow-lg transition-colors"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
@@ -146,7 +146,7 @@ export default function SpecialProducts() {
         {/* Scrollable Cards Container */}
         <div
           ref={scrollRef}
-          className="flex gap-4 overflow-x-auto scroll-smooth pb-2"
+          className="flex gap-4 overflow-x-auto scroll-smooth pb-4 products-scroll"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           <style>{`
@@ -154,7 +154,7 @@ export default function SpecialProducts() {
           `}</style>
 
           {products.map((product) => (
-            <div key={product.id} className="flex-shrink-0 w-[230px]">
+            <div key={product.id} className="flex-shrink-0 w-[280px] md:w-[calc(25%-12px)]">
               <ProductCard
                 {...product}
                 onAddToCart={() => console.log("Add to cart:", product.name)}
@@ -167,7 +167,7 @@ export default function SpecialProducts() {
         {/* Right Arrow */}
         <button
           onClick={scrollRight}
-          className="hidden md:flex absolute -right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-[#1a1a1a] hover:bg-[#333] text-white rounded-full items-center justify-center shadow-lg transition-colors"
+          className="hidden md:flex absolute -right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-[#1a1a1a] hover:bg-[#333] text-white rounded-full items-center justify-center shadow-lg transition-colors"
         >
           <ChevronRight className="w-5 h-5" />
         </button>
