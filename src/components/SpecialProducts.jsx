@@ -17,7 +17,7 @@ const products = [
     productType: "pill",
     vialLabel: "ANAVAR",
     vialDose: "10MG × 100 TABLETS",
-    image: "https://placehold.co/600x600/f5f5f5/1565C0?text=Special+1",
+    image: "https://placehold.co/600x600/f5f5f5/734B1A?text=Special+1",
   },
   {
     id: 2,
@@ -31,7 +31,7 @@ const products = [
     productType: "injectable",
     vialColor: "#8b5cf6",
     vialLabel: "Nandrolone-D 300",
-    image: "https://placehold.co/600x600/f5f5f5/1565C0?text=Special+2",
+    image: "https://placehold.co/600x600/f5f5f5/734B1A?text=Special+2",
   },
   {
     id: 3,
@@ -46,7 +46,7 @@ const products = [
     vialColor: "#5b9bd5",
     vialLabel: "Semaglutide",
     vialDose: "5mg",
-    image: "https://placehold.co/600x600/f5f5f5/1565C0?text=Special+3",
+    image: "https://placehold.co/600x600/f5f5f5/734B1A?text=Special+3",
   },
   {
     id: 4,

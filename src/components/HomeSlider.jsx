@@ -43,7 +43,7 @@ export default function HeroSlider() {
         .hero-swiper .swiper-button-next { right: 16px !important; }
         .hero-swiper .swiper-button-prev { left: 16px !important; }
         .hero-swiper .swiper-pagination-bullet-active {
-          background: #1565C0 !important;
+          background: #734B1A !important;
         }
         .hero-swiper .swiper-pagination {
           bottom: 12px !important;

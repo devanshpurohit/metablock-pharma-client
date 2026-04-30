@@ -135,7 +135,7 @@ export default function Navbar() {
             style={{ letterSpacing: "-1px" }}
           >
             <img 
-              src="/assets/logo.png" 
+              src="/assets/pharma.png" 
               alt="Roidspharma Logo" 
               className="h-16 md:h-24 w-auto object-contain"
             />
@@ -362,7 +362,7 @@ export default function Navbar() {
             {/* Header */}
             <div className="bg-primary p-4 flex items-center justify-between text-white">
               <a href="/" className="flex items-center">
-                <img src="/assets/logo.png" alt="Roidspharma Logo" className="h-16 w-auto object-contain" />
+                <img src="/assets/pharma.png" alt="Roidspharma Logo" className="h-16 w-auto object-contain" />
               </a>
               <button onClick={() => setIsMobileMenuOpen(false)} className="p-1 hover:bg-white/10 rounded-sm">
                 <X className="w-6 h-6" />

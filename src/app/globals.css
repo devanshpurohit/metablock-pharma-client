@@ -3,9 +3,9 @@
 
 @theme {
   --animate-marquee: marquee 20s linear infinite;
-  --color-primary: #1565C0;
-  --color-secondary: #42A5F5;
-  --color-accent: #E3F2FD;
+  --color-primary: #734B1A;
+  --color-secondary: #8D5E21;
+  --color-accent: #FDF5E6;
   --font-sans: var(--font-dosis), ui-sans-serif, system-ui, sans-serif;
 
   @keyframes marquee {
