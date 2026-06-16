@@ -4,17 +4,17 @@ import { useState, useEffect } from "react";
 import api from "@/utils/api";
 import CustomerReviews from "@/components/Review";
 
-export default function ShippingPage() {
+export default function PrivacyPolicyPage() {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get("/pages/shipping")
+    api.get("/pages/privacy-policy")
       .then((res) => {
         setContent(res.data?.content || "");
       })
       .catch((err) => {
-        console.error("Error loading shipping page:", err);
+        console.error("Error loading privacy policy page:", err);
       })
       .finally(() => {
         setLoading(false);
@@ -39,13 +39,13 @@ export default function ShippingPage() {
       <div className="px-6 py-3 text-sm text-gray-500 flex items-center gap-1.5 border-b border-gray-100">
         <a href="/" className="hover:text-primary">Home</a>
         <span>›</span>
-        <span className="text-gray-700">Shipping &amp; Delivery Information</span>
+        <span className="text-gray-700">Privacy Policy</span>
       </div>
 
       <div className="px-6 py-8 max-w-7xl mx-auto">
         {/* Page Title */}
         <h1 className="text-2xl font-normal text-gray-800 mb-6">
-          Shipping &amp; Delivery Information
+          Privacy Policy
         </h1>
 
         {loading ? (

@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Search,
   User,
@@ -19,75 +19,102 @@ import {
   CreditCard,
   Info,
   X,
+  LogOut,
+  Settings,
+  Send,
 } from "lucide-react";
-
-// Brand data
-const brands = [
-  { name: "Bull Pharma",   country: "USA", bg: "bg-gray-100", border: "border-gray-200", image: "https://www.getroids1.net/image/cache/catalog/BRAND%20LOGOS/bull-pharma-steroids-logo-160x160.png.webp" },
-  { name: "Pharmaqo Labs", country: "USA", bg: "bg-gray-100", border: "border-gray-200", image: "https://www.getroids1.net/image/cache/catalog/BRAND%20LOGOS/pharmaqo-labs-logo-160x160.png.webp" },
-  { name: "Evolve Biolabs",country: "INT", bg: "bg-gray-100", border: "border-gray-200", image: "https://www.getroids1.net/image/cache/catalog/BRANDS/evolve-biolabs-india-160x160.png.webp" },
-  { name: "XT Labs",       country: "USA", bg: "bg-gray-100", border: "border-gray-200", image: "https://www.getroids1.net/image/cache/catalog/BRAND%20LOGOS/xt-labs-logo-160x160.png.webp" },
-  { name: "Xeno Labs",     country: "US",  bg: "bg-gray-100", border: "border-gray-200", image: "https://www.getroids1.net/image/cache/catalog/BRAND%20LOGOS/xeno-labs-logo-160x160.png.webp" },
-  { name: "Kassel Pharma", country: "USA", bg: "bg-gray-100", border: "border-gray-200", image: "https://www.getroids1.net/image/cache/catalog/BRANDS/kassel-pharma-logo-160x160.png.webp" },
-  { name: "PeptidePlus",   country: "USA", bg: "bg-teal-400", border: "border-teal-300", image: "https://www.getroids1.net/image/cache/catalog/BRAND%20LOGOS/peptide-plus-logo-160x160.png.webp" },
-  { name: "Driada Medical",country: "EU",  bg: "bg-gray-100", border: "border-gray-200", image: "https://www.getroids1.net/image/cache/catalog/BRAND%20LOGOS/driada-medical-logo-160x160.png.webp" },
-  { name: "Omega Labs",    country: "USA", bg: "bg-gray-100", border: "border-gray-200", image: "https://www.getroids1.net/image/cache/catalog/BRAND%20LOGOS/omega-labs-steroids-logo-160x160.png.webp" },
-  { name: "Sixpex",        country: "USA", bg: "bg-gray-100", border: "border-gray-200", image: "https://www.getroids1.net/image/cache/catalog/BRAND%20LOGOS/sixpex-logo-160x160.png.webp" },
-];
-
-// Mega Menu Data
-const megaMenuColumns = [
-  [
-    {
-      title: "Injectable Steroids (Liquids)",
-      items: ["Boldenone Undecylenate", "Dihydroboldenone Cypionate", "Drostanolone Enanthate", "Drostanolone Propionate", "Nandrolone Decanoate", "Nandrolone Phenylpropionate", "Primobolan Depot", "Sustanon", "Testosterone Acetate", "Testosterone Cypionate", "Testosterone Decanoate", "Testosterone Enanthate", "Testosterone Phenylpropionate", "Testosterone Propionate", "Testosterone Suspension", "Testosterone Undecanoate", "Trenbolone Acetate", "Trenbolone Enanthate", "Trenbolone Hexahydrobenzylcarbonate"]
-    },
-    {
-      title: "Oral Steroids (Steroid Pills)",
-      items: ["Anavar", "Dianabol", "Halotestin", "Turinabol", "Winstrol"]
-    }
-  ],
-  [
-    {
-      title: "Peptides",
-      items: ["AOD9604", "BPC-157", "Cagrilintide", "CJC-1295 DAC", "DSIP", "Epithalon", "Follistatin", "Fragment 176-191", "GHK-CU", "GHRP-2", "GHRP-6", "Glutathione", "HCG", "Hexarelin", "HMG", "IGF-1", "Ipamorelin", "Mazdutide", "Melanotan", "MOD GRF", "MOTS-C", "MYO", "NAD+"]
-    },
-    {
-      title: "Sarms",
-      items: ["Andarine S4", "Cardarine", "LGD-4033", "MK-677", "Ostarine", "RAD-140", "YK-11"]
-    }
-  ],
-  [
-    {
-      title: "Post Cycle Therapy",
-      items: ["Anastrozole", "Cabergoline", "Clomiphene Citrate", "Exemestane", "Proviron", "Tamoxifen Citrate"]
-    },
-    {
-      title: "Fat Burners",
-      items: ["Bromocriptine", "Clenbuterol", "Ketotifen", "Levothyroxine Sodium", "Liothyronine Sodium", "Orlistat", "Salbutamol", "Semaglutide (Ozempic)", "Sibutramine", "Tirzepatide"]
-    }
-  ],
-  [
-    {
-      isStandalone: true,
-      items: ["USA Domestic", "UK Domestic", "EU Domestic", "Men's Health", "Cycles (Steroid Programs)", "Lab Test", "Bulk Offers"]
-    }
-  ]
-];
+import api, { resolveImageUrl } from "@/utils/api";
+import { useCart } from "@/context/CartContext";
+import { useCurrency } from "@/context/CurrencyContext";
+import { useFavorites } from "@/context/FavoritesContext";
 
 export default function Navbar() {
+  const { cartItems, setIsCartOpen } = useCart();
+  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const { currency, setCurrency } = useCurrency();
+  const { favorites } = useFavorites();
+  const [brands, setBrands] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [carouselStart, setCarouselStart] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [customer, setCustomer] = useState(null);
   const visibleCount = 9;
+
+  useEffect(() => {
+    const checkAuth = () => {
+      const storedUser = localStorage.getItem("customerUser");
+      const storedToken = localStorage.getItem("customerToken");
+      if (storedUser && storedToken) {
+        try {
+          setCustomer(JSON.parse(storedUser));
+        } catch (e) {
+          setCustomer(null);
+        }
+      } else {
+        setCustomer(null);
+      }
+    };
+
+    checkAuth();
+
+    // Listen for custom authentication changes (e.g. login/register)
+    window.addEventListener("customerAuthChange", checkAuth);
+    return () => {
+      window.removeEventListener("customerAuthChange", checkAuth);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("customerToken");
+    localStorage.removeItem("customerUser");
+    setCustomer(null);
+    window.dispatchEvent(new Event("customerAuthChange"));
+    window.location.href = "/login";
+  };
+
+  useEffect(() => {
+    api.get("/brands?limit=100")
+      .then((res) => {
+        const fetched = res.data.data || [];
+        setBrands(
+          fetched.map((b) => ({
+            name: b.brandName,
+            image: resolveImageUrl(b.logo),
+            country: "USA",
+            bg: "bg-gray-100",
+            border: "border-gray-200",
+          }))
+        );
+      })
+      .catch((err) => console.error("Error fetching brands for navbar:", err));
+
+    api.get("/categories?limit=100")
+      .then((res) => {
+        setCategories(res.data.data || []);
+      })
+      .catch((err) => console.error("Error fetching categories for navbar:", err));
+  }, []);
 
   const handlePrev = () =>
     setCarouselStart((prev) => Math.max(0, prev - 1));
 
   const handleNext = () =>
     setCarouselStart((prev) =>
-      Math.min(brands.length - visibleCount, prev + 1)
+      Math.min(Math.max(0, brands.length - visibleCount), prev + 1)
     );
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      window.location.href = `/all-products?search=${encodeURIComponent(searchQuery.trim())}`;
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
 
   const visibleBrands = brands.slice(carouselStart, carouselStart + visibleCount);
 
@@ -143,9 +170,17 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Cart Icon (Visible only on mobile) */}
-        <a href="/cart" className="md:hidden text-white p-1 hover:bg-white/10 rounded-sm transition-colors">
+        <button 
+          onClick={() => setIsCartOpen(true)} 
+          className="md:hidden text-white p-1 hover:bg-white/10 rounded-sm transition-colors relative"
+        >
           <ShoppingBag className="w-6 h-6" />
-        </a>
+          {cartCount > 0 && (
+            <span className="absolute -top-0.5 -right-0.5 bg-orange-500 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+              {cartCount}
+            </span>
+          )}
+        </button>
 
         {/* Search Bar */}
         <div className="w-full md:flex-1 max-w-2xl order-3 md:order-none mt-2 md:mt-0">
@@ -154,10 +189,14 @@ export default function Navbar() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder="Search for product, category or brand..."
               className="flex-1 px-4 py-2.5 text-sm text-gray-600 outline-none placeholder-gray-400"
             />
-            <button className="px-4 py-2.5 bg-white hover:bg-gray-50 transition-colors">
+            <button 
+              onClick={handleSearch}
+              className="px-4 py-2.5 bg-white hover:bg-gray-50 transition-colors"
+            >
               <Search className="w-5 h-5 text-gray-400" />
             </button>
           </div>
@@ -168,15 +207,38 @@ export default function Navbar() {
 
           {/* Currency + Contact */}
           <div className="flex items-center gap-4 text-white text-xs">
-            <span className="flex items-center gap-1 cursor-pointer hover:underline">
-              <DollarSign className="w-3.5 h-3.5" />
-              US Dollar
-              <ChevronDown className="w-3 h-3" />
-            </span>
-            <span className="flex items-center gap-1 cursor-pointer hover:underline">
+            {/* Currency Switcher */}
+            <div className="relative group cursor-pointer pb-2 -mb-2">
+              <span className="flex items-center gap-1 hover:text-gray-200 transition-colors">
+                <DollarSign className="w-3.5 h-3.5" />
+                {currency === "INR" ? "INR (₹)" : "US Dollar ($)"}
+                <ChevronDown className="w-3 h-3 group-hover:rotate-180 transition-transform duration-200" />
+              </span>
+              
+              <div className="absolute right-0 top-full opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pt-2">
+                <div className="w-3 h-3 bg-[#141414] rotate-45 absolute top-0 right-6 z-40 border-t border-l border-white/5"></div>
+                <div className="bg-[#141414] rounded-xl shadow-2xl border border-white/10 w-40 flex flex-col py-1.5 text-white text-xs relative z-50">
+                  <button 
+                    onClick={() => setCurrency("USD")}
+                    className={`px-4 py-2 hover:bg-white/5 text-left font-bold ${currency === "USD" ? "text-secondary" : "text-white"}`}
+                  >
+                    $ US Dollar
+                  </button>
+                  <button 
+                    onClick={() => setCurrency("INR")}
+                    className={`px-4 py-2 hover:bg-white/5 text-left font-bold ${currency === "INR" ? "text-secondary" : "text-white"}`}
+                  >
+                    ₹ INR (Rupee)
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Contact Link */}
+            <a href="/contact" className="flex items-center gap-1 hover:underline">
               <Clock className="w-3.5 h-3.5" />
               Contact
-            </span>
+            </a>
           </div>
 
           {/* Account / Favorites / Cart */}
@@ -184,24 +246,76 @@ export default function Navbar() {
             <div className="relative group cursor-pointer pb-2 -mb-2">
               <div className="flex flex-col items-center gap-0.5 hover:text-gray-200 transition-colors">
                 <User className="w-6 h-6" strokeWidth={1.5} />
-                <span>Account</span>
+                <span>{customer ? customer.name.split(' ')[0] : "Account"}</span>
               </div>
               {/* Dropdown Menu */}
-              <div className="absolute right-0 top-full opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                <div className="bg-white rounded-sm shadow-xl border border-gray-200 w-32 flex flex-col py-1 text-gray-800 text-sm">
-                  <a href="/login" className="px-4 py-2 hover:bg-gray-100 transition-colors text-left">Login</a>
-                  <a href="/register" className="px-4 py-2 hover:bg-gray-100 transition-colors text-left">Register</a>
+              <div className="absolute right-0 top-full opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pt-2">
+                {/* Arrow Pointer */}
+                <div className="w-3 h-3 bg-[#141414] rotate-45 absolute top-0 right-6 z-40 border-t border-l border-white/5"></div>
+                <div className="bg-[#141414] rounded-xl shadow-2xl border border-white/10 w-48 flex flex-col py-2.5 text-white text-sm relative z-50">
+                  {customer ? (
+                    <>
+                      <div className="px-4 py-2 text-gray-400 font-semibold border-b border-white/10 text-xs tracking-wider uppercase truncate" title={customer.name}>
+                        {customer.name}
+                      </div>
+                      
+                      <a href="/account" className="px-4 py-2.5 hover:bg-white/5 transition-colors text-left flex items-center gap-3 text-white font-medium hover:text-secondary group/item">
+                        <Settings className="w-4.5 h-4.5 text-gray-400 group-hover/item:text-secondary" />
+                        My Account
+                      </a>
+                      
+                      <a href="/orders" className="px-4 py-2.5 hover:bg-white/5 transition-colors text-left flex items-center gap-3 text-white font-medium hover:text-secondary group/item">
+                        <ShoppingBag className="w-4.5 h-4.5 text-gray-400 group-hover/item:text-secondary" />
+                        All Orders
+                      </a>
+                      
+                      <a href="/submit-payment" className="px-4 py-2.5 hover:bg-white/5 transition-colors text-left flex items-center gap-3 text-white font-medium hover:text-secondary group/item">
+                        <Send className="w-4.5 h-4.5 text-gray-400 group-hover/item:text-secondary" />
+                        Submit Payment
+                      </a>
+                      
+                      <button 
+                        onClick={handleLogout} 
+                        className="w-full px-4 py-2.5 hover:bg-red-500/10 transition-colors text-left text-red-400 font-semibold flex items-center gap-3 cursor-pointer bg-transparent border-0 mt-1 border-t border-white/5"
+                      >
+                        <LogOut className="w-4.5 h-4.5 text-red-400" />
+                        Logout
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <a href="/login" className="px-4 py-2.5 hover:bg-white/5 transition-colors text-left block font-medium">Login</a>
+                      <a href="/register" className="px-4 py-2.5 hover:bg-white/5 transition-colors text-left block font-medium">Register</a>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
-            <button className="flex flex-col items-center gap-0.5 hover:text-gray-200 transition-colors">
-              <Heart className="w-6 h-6" strokeWidth={1.5} />
+            <a href="/favorites" className="flex flex-col items-center gap-0.5 hover:text-gray-200 transition-colors relative">
+              <div className="relative">
+                <Heart className="w-6 h-6" strokeWidth={1.5} />
+                {favorites.length > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                    {favorites.length}
+                  </span>
+                )}
+              </div>
               <span>Favorites</span>
-            </button>
-            <a href="/cart" className="flex flex-col items-center gap-0.5 hover:text-gray-200 transition-colors">
-              <ShoppingBag className="w-6 h-6" strokeWidth={1.5} />
-              <span>Cart</span>
             </a>
+            <button 
+              onClick={() => setIsCartOpen(true)} 
+              className="flex flex-col items-center gap-0.5 hover:text-gray-200 transition-colors cursor-pointer"
+            >
+              <div className="relative">
+                <ShoppingBag className="w-6 h-6" strokeWidth={1.5} />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 bg-orange-500 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </div>
+              <span>Cart</span>
+            </button>
           </div>
 
         </div>
@@ -220,37 +334,16 @@ export default function Navbar() {
           
           {/* ── ALL CATEGORIES MEGA MENU ── */}
           <div className="absolute left-0 top-full w-full bg-white text-gray-800 py-6 px-8 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 shadow-xl border-t-[3px] border-primary translate-y-2 group-hover:translate-y-0 cursor-default max-h-[85vh] overflow-y-auto">
-            <div className="grid grid-cols-4 gap-8">
-              {megaMenuColumns.map((col, colIdx) => (
-                <div key={colIdx} className="flex flex-col gap-6">
-                  {col.map((section, secIdx) => (
-                    <div key={secIdx}>
-                      {section.isStandalone ? (
-                        <ul className="flex flex-col gap-6 font-bold text-[13px] text-gray-700">
-                          {section.items.map((item, i) => (
-                            <li key={i}>
-                              <a href="#" className="hover:text-secondary transition-colors">
-                                {item}
-                              </a>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <>
-                          <h3 className="font-bold text-gray-800 mb-4 text-[13px]">{section.title}</h3>
-                          <ul className="flex flex-col gap-3 text-[12px] text-gray-500">
-                            {section.items.map((item, i) => (
-                              <li key={i}>
-                                <a href="#" className="flex items-center gap-1.5 hover:text-secondary transition-colors">
-                                  <span className="text-gray-400 text-[10px]">›</span> {item}
-                                </a>
-                              </li>
-                            ))}
-                          </ul>
-                        </>
-                      )}
-                    </div>
-                  ))}
+            <div className="grid grid-cols-4 gap-4 max-h-[60vh] overflow-y-auto w-full">
+              {categories.map((category) => (
+                <div key={category._id} className="py-1">
+                  <a
+                    href={`/all-products?category=${category._id}`}
+                    className="font-bold text-gray-800 text-[13px] hover:text-primary transition-colors flex items-center gap-1.5"
+                  >
+                    <span className="text-primary text-[14px] font-normal">›</span>
+                    {category.categoryName}
+                  </a>
                 </div>
               ))}
             </div>
@@ -328,23 +421,47 @@ export default function Navbar() {
         </a>
 
         {/* Why Roidspharma? */}
-        <button className="flex items-center gap-1.5 px-4 py-3 hover:bg-[#333333] transition-colors whitespace-nowrap border-l border-[#444]">
+        <a href="/why-roidspharma" className="flex items-center gap-1.5 px-4 py-3 hover:bg-[#333333] transition-colors whitespace-nowrap border-l border-[#444]">
           <Star className="w-4 h-4" />
           Why Roidspharma?
-        </button>
+        </a>
 
-        {/* Payment */}
-        <button className="flex items-center gap-1.5 px-4 py-3 hover:bg-[#333333] transition-colors whitespace-nowrap border-l border-[#444]">
-          <CreditCard className="w-4 h-4" />
-          Payment
-          <ChevronDown className="w-3 h-3" />
-        </button>
+        {/* Payment Dropdown */}
+        <div className="group relative h-full flex items-center">
+          <button className="flex items-center gap-1.5 px-4 py-3 hover:bg-[#333333] transition-colors whitespace-nowrap border-l border-[#444] h-full cursor-pointer">
+            <CreditCard className="w-4 h-4" />
+            Payment
+            <ChevronDown className="w-3 h-3 group-hover:rotate-180 transition-transform duration-200" />
+          </button>
+
+          {/* Dropdown Menu */}
+          <div className="absolute left-0 top-full bg-[#222222] border-t-[3px] border-primary shadow-2xl py-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 translate-y-2 group-hover:translate-y-0">
+            <a 
+              href="/payment-methods" 
+              className="block px-4 py-2.5 hover:bg-[#333333] hover:text-secondary transition-colors text-[13px] font-semibold text-gray-200"
+            >
+              Payments for Steroids
+            </a>
+            <a 
+              href="/buy-steroids-bitcoin" 
+              className="block px-4 py-2.5 hover:bg-[#333333] hover:text-secondary transition-colors text-[13px] font-semibold text-gray-200"
+            >
+              Buy Steroids Bitcoin
+            </a>
+            <a 
+              href="/buy-steroids-credit-card" 
+              className="block px-4 py-2.5 hover:bg-[#333333] hover:text-secondary transition-colors text-[13px] font-semibold text-gray-200"
+            >
+              Buy Steroids Credit Card
+            </a>
+          </div>
+        </div>
 
         {/* Steroid Info Guide */}
-        <button className="flex items-center gap-1.5 px-4 py-3 hover:bg-[#333333] transition-colors whitespace-nowrap border-l border-[#444]">
+        <a href="/steroids-guide" className="flex items-center gap-1.5 px-4 py-3 hover:bg-[#333333] transition-colors whitespace-nowrap border-l border-[#444]">
           <Info className="w-4 h-4" />
           Steroid Info Guide
-        </button>
+        </a>
 
       </div>
 
@@ -371,41 +488,70 @@ export default function Navbar() {
             
             {/* Menu Items */}
             <div className="flex flex-col py-2">
-              <a href="/login" className="px-5 py-3 border-b border-gray-100 flex items-center gap-3 text-gray-700 hover:bg-gray-50 font-medium">
-                <User className="w-5 h-5 text-gray-400" /> Account
-              </a>
+              {customer ? (
+                <>
+                  <div className="px-5 py-3 border-b border-gray-100 flex items-center gap-3 text-gray-700 font-semibold bg-gray-50">
+                    <User className="w-5 h-5 text-primary" /> Hi, {customer.name}
+                  </div>
+                  <a href="/account" onClick={() => setIsMobileMenuOpen(false)} className="px-5 py-3 border-b border-gray-100 flex items-center gap-3 text-gray-700 hover:bg-gray-50 font-medium">
+                    <Settings className="w-5 h-5 text-gray-400" /> My Account
+                  </a>
+                  <a href="/orders" onClick={() => setIsMobileMenuOpen(false)} className="px-5 py-3 border-b border-gray-100 flex items-center gap-3 text-gray-700 hover:bg-gray-50 font-medium">
+                    <ShoppingBag className="w-5 h-5 text-gray-400" /> All Orders
+                  </a>
+                  <a href="/submit-payment" onClick={() => setIsMobileMenuOpen(false)} className="px-5 py-3 border-b border-gray-100 flex items-center gap-3 text-gray-700 hover:bg-gray-50 font-medium">
+                    <Send className="w-5 h-5 text-gray-400" /> Submit Payment
+                  </a>
+                  <button 
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      handleLogout();
+                    }} 
+                    className="w-full px-5 py-3 border-b border-gray-100 flex items-center gap-3 text-red-600 hover:bg-gray-50 font-semibold text-left cursor-pointer bg-transparent border-0 outline-none"
+                  >
+                    <LogOut className="w-5 h-5 text-red-500" /> Logout
+                  </button>
+                </>
+              ) : (
+                <a href="/login" className="px-5 py-3 border-b border-gray-100 flex items-center gap-3 text-gray-700 hover:bg-gray-50 font-medium">
+                  <User className="w-5 h-5 text-gray-400" /> Account / Login
+                </a>
+              )}
               <a href="/all-products" className="px-5 py-3 border-b border-gray-100 flex items-center gap-3 text-gray-700 hover:bg-gray-50 font-medium">
                 <Hand className="w-5 h-5 text-gray-400" /> All Products
               </a>
               <a href="/shipping" className="px-5 py-3 border-b border-gray-100 flex items-center gap-3 text-gray-700 hover:bg-gray-50 font-medium">
                 <Truck className="w-5 h-5 text-gray-400" /> Shipping
               </a>
+
+              {/* Payment Mobile Options */}
+              <div className="px-5 py-4 bg-gray-50 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                Payment Options
+              </div>
+              <a href="/payment-methods" onClick={() => setIsMobileMenuOpen(false)} className="px-5 py-3 border-b border-gray-100 text-gray-700 hover:bg-gray-50 font-medium pl-8 flex items-center gap-1.5">
+                <span className="text-gray-400 text-[10px]">›</span> Payments for Steroids
+              </a>
+              <a href="/buy-steroids-bitcoin" onClick={() => setIsMobileMenuOpen(false)} className="px-5 py-3 border-b border-gray-100 text-gray-700 hover:bg-gray-50 font-medium pl-8 flex items-center gap-1.5">
+                <span className="text-gray-400 text-[10px]">›</span> Buy Steroids Bitcoin
+              </a>
+              <a href="/buy-steroids-credit-card" onClick={() => setIsMobileMenuOpen(false)} className="px-5 py-3 border-b border-gray-100 text-gray-700 hover:bg-gray-50 font-medium pl-8 flex items-center gap-1.5">
+                <span className="text-gray-400 text-[10px]">›</span> Buy Steroids Credit Card
+              </a>
               
               {/* Categories */}
               <div className="px-5 py-4 bg-gray-50 text-xs font-bold text-gray-500 uppercase tracking-wider">
                 Categories
               </div>
-              {megaMenuColumns.flat().map((section, idx) => (
-                <div key={idx} className="flex flex-col">
-                  {section.isStandalone ? (
-                    section.items.map((item, i) => (
-                      <a key={i} href="#" className="px-5 py-3 border-b border-gray-100 text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors text-sm">
-                        {item}
-                      </a>
-                    ))
-                  ) : (
-                    <div className="flex flex-col">
-                      <div className="px-5 py-3 bg-gray-100 border-b border-gray-200 text-gray-800 font-semibold text-sm">
-                        {section.title}
-                      </div>
-                      {section.items.map((item, i) => (
-                        <a key={i} href="#" className="px-5 py-2.5 border-b border-gray-50 text-gray-600 hover:bg-gray-50 hover:text-primary transition-colors text-sm pl-8">
-                          {item}
-                        </a>
-                      ))}
-                    </div>
-                  )}
-                </div>
+              {categories.map((category) => (
+                <a
+                  key={category._id}
+                  href={`/all-products?category=${category._id}`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="px-5 py-3 border-b border-gray-100 text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors text-sm pl-8 flex items-center gap-1.5"
+                >
+                  <span className="text-gray-400 text-[10px]">›</span>
+                  {category.categoryName}
+                </a>
               ))}
             </div>
           </div>

@@ -1,43 +1,22 @@
 "use client";
-import { useState } from "react";
-import { ChevronLeft, ChevronRight, ShoppingCart, Eye, Flame } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import api, { resolveImageUrl } from "@/utils/api";
 
-// ─── Brand Data ───────────────────────────────────────────────────────────────
-const brands = [
-  { name: "Bull Pharma",   country: "USA", bg: "bg-gray-100", border: "border-gray-200", image: "https://www.getroids1.net/image/cache/catalog/BRAND%20LOGOS/bull-pharma-steroids-logo-160x160.png.webp" },
-  { name: "Pharmaqo Labs", country: "USA", bg: "bg-gray-100", border: "border-gray-200", image: "https://www.getroids1.net/image/cache/catalog/BRAND%20LOGOS/pharmaqo-labs-logo-160x160.png.webp" },
-  { name: "Evolve Biolabs",country: "INT", bg: "bg-gray-100", border: "border-gray-200", image: "https://www.getroids1.net/image/cache/catalog/BRANDS/evolve-biolabs-india-160x160.png.webp" },
-  { name: "XT Labs",       country: "USA", bg: "bg-gray-100", border: "border-gray-200", image: "https://www.getroids1.net/image/cache/catalog/BRAND%20LOGOS/xt-labs-logo-160x160.png.webp" },
-  { name: "Xeno Labs",     country: "US",  bg: "bg-gray-100", border: "border-gray-200", image: "https://www.getroids1.net/image/cache/catalog/BRAND%20LOGOS/xeno-labs-logo-160x160.png.webp" },
-  { name: "Kassel Pharma", country: "USA", bg: "bg-gray-100", border: "border-gray-200", image: "https://www.getroids1.net/image/cache/catalog/BRANDS/kassel-pharma-logo-160x160.png.webp" },
-  { name: "PeptidePlus",   country: "USA", bg: "bg-teal-400", border: "border-teal-300", image: "https://www.getroids1.net/image/cache/catalog/BRAND%20LOGOS/peptide-plus-logo-160x160.png.webp" },
-  { name: "Driada Medical",country: "EU",  bg: "bg-gray-100", border: "border-gray-200", image: "https://www.getroids1.net/image/cache/catalog/BRAND%20LOGOS/driada-medical-logo-160x160.png.webp" },
-  { name: "Omega Labs",    country: "USA", bg: "bg-gray-100", border: "border-gray-200", image: "https://www.getroids1.net/image/cache/catalog/BRAND%20LOGOS/omega-labs-steroids-logo-160x160.png.webp" },
-  { name: "Sixpex",        country: "USA", bg: "bg-gray-100", border: "border-gray-200", image: "https://www.getroids1.net/image/cache/catalog/BRAND%20LOGOS/sixpex-logo-160x160.png.webp" },
-];
+// Map banner type → keywords to match against categoryName
+const BANNER_KEYWORDS = {
+  usa:  ["usa", "domestic", "united states", "american"],
+  eu:   ["eu", "europe", "european"],
+  uk:   ["uk", "united kingdom", "britain", "british"],
+  intl: ["international", "worldwide", "global", "shipping"],
+};
 
-// ─── Shipping Banners ─────────────────────────────────────────────────────────
 const shippingBanners = [
-  {
-    label: "USA DOMESTIC",
-    flagColors: ["#B22234", "#FFFFFF", "#3C3B6E"],
-    type: "usa",
-  },
-  {
-    label: "EU DOMESTIC",
-    flagColors: ["#003399", "#FFCC00"],
-    type: "eu",
-  },
-  {
-    label: "UK DOMESTIC",
-    flagColors: ["#012169", "#FFFFFF", "#C8102E"],
-    type: "uk",
-  },
-  {
-    label: "INTERNATIONAL SHIPPING",
-    flagColors: ["#1a3a5c", "#2a6ab5"],
-    type: "intl",
-  },
+  { label: "USA DOMESTIC",        flagColors: ["#B22234","#FFFFFF","#3C3B6E"], type: "usa" },
+  { label: "EU DOMESTIC",         flagColors: ["#003399","#FFCC00"],           type: "eu" },
+  { label: "UK DOMESTIC",         flagColors: ["#012169","#FFFFFF","#C8102E"], type: "uk" },
+  { label: "INTERNATIONAL SHIPPING", flagColors: ["#1a3a5c","#2a6ab5"],       type: "intl" },
 ];
 
 // ─── Flag SVGs ────────────────────────────────────────────────────────────────
@@ -142,48 +121,75 @@ const flagComponents = {
   intl: <IntlFlag />,
 };
 
-// ─── Tab Data ─────────────────────────────────────────────────────────────────
-const tabs = [
-  {
-    id: "cart",
-    label: "Most Added To Cart",
-    icon: <ShoppingCart className="w-5 h-5" />,
-    bg: "bg-[#e8f5ec]",
-    activeBg: "bg-[#c8ecd4]",
-    border: "border-[#b0dfc0]",
-    text: "text-[#1a7a3a]",
-  },
-  {
-    id: "viewed",
-    label: "Most Viewed",
-    icon: <Eye className="w-5 h-5" />,
-    bg: "bg-[#fdf0ea]",
-    activeBg: "bg-[#f9dece]",
-    border: "border-[#f0c8b0]",
-    text: "text-[#a04020]",
-  },
-  {
-    id: "discounted",
-    label: "Discounted Products",
-    icon: <Flame className="w-5 h-5" />,
-    bg: "bg-[#fdf8dc]",
-    activeBg: "bg-[#f9f0b0]",
-    border: "border-[#e8d870]",
-    text: "text-[#8a7000]",
-  },
-];
-
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function Brands() {
-  const [activeTab, setActiveTab] = useState("cart");
+  const router = useRouter();
+  const [brands, setBrands]             = useState([]);
+  const [categoryMap, setCategoryMap]   = useState({});   // { bannerType -> categoryId }
+  const [loading, setLoading]           = useState(true);
+  const [error, setError]               = useState(null);
   const [carouselStart, setCarouselStart] = useState(0);
   const visibleCount = 9;
 
+  useEffect(() => {
+    // Fetch brands AND categories in parallel
+    Promise.all([
+      api.get("/brands?limit=100"),
+      api.get("/categories?limit=100"),
+    ]).then(([brandRes, catRes]) => {
+      // Build brands list
+      const fetched = brandRes.data.data || [];
+      setBrands(
+        fetched.map((b) => ({
+          id: b._id,
+          name: b.brandName,
+          image: resolveImageUrl(b.logo),
+          country: "USA",
+          bg: "bg-gray-100",
+          border: "border-gray-200",
+        }))
+      );
+
+      // Build categoryMap: match each banner type by keyword
+      const cats = catRes.data.data || [];
+      const map = {};
+      shippingBanners.forEach(({ type }) => {
+        const keywords = BANNER_KEYWORDS[type];
+        const match = cats.find((c) =>
+          keywords.some((kw) =>
+            c.categoryName?.toLowerCase().includes(kw)
+          )
+        );
+        if (match) map[type] = match._id;
+      });
+      setCategoryMap(map);
+      setLoading(false);
+    }).catch((err) => {
+      console.error("Error fetching brands/categories:", err);
+      setError("Failed to load.");
+      setLoading(false);
+    });
+  }, []);
+
+  // Navigate to all-products, filtered by category if matched
+  const handleBannerClick = (type) => {
+    const catId = categoryMap[type];
+    if (catId) {
+      router.push(`/all-products?category=${catId}`);
+    } else {
+      // Fallback — open all products page without filter
+      router.push("/all-products");
+    }
+  };
+
   const handlePrev = () => setCarouselStart((p) => Math.max(0, p - 1));
   const handleNext = () =>
-    setCarouselStart((p) => Math.min(brands.length - visibleCount, p + 1));
+    setCarouselStart((p) =>
+      Math.min(Math.max(0, brands.length - visibleCount), p + 1)
+    );
 
   const visibleBrands = brands.slice(carouselStart, carouselStart + visibleCount);
+
 
   return (
     <div className="w-full bg-white font-sans">
@@ -204,6 +210,7 @@ export default function Brands() {
           {visibleBrands.map((brand, i) => (
             <div
               key={carouselStart + i}
+              onClick={() => router.push(`/all-products?brand=${brand.id}`)}
               className="flex flex-col items-center gap-2 cursor-pointer group w-[100px]"
             >
               {/* Circle */}
@@ -234,33 +241,14 @@ export default function Brands() {
         </button>
       </div>
 
-      {/* ── TAB BUTTONS ── */}
-      <div className="flex flex-col md:flex-row items-stretch gap-2 md:gap-0 px-4 mt-6">
-        {tabs.map((tab, idx) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`
-              flex-1 flex items-center justify-center gap-2 py-4 px-6
-              font-bold text-base md:text-lg border transition-all duration-200 rounded-md md:rounded-none
-              ${activeTab === tab.id ? `${tab.activeBg} ${tab.border} ${tab.text}` : `${tab.bg} border-transparent ${tab.text} opacity-80`}
-              ${idx === 0 ? "md:rounded-l-md" : ""}
-              ${idx === tabs.length - 1 ? "md:rounded-r-md" : ""}
-              hover:opacity-100
-            `}
-          >
-            {tab.icon}
-            <span>{tab.label}</span>
-          </button>
-        ))}
-      </div>
-
       {/* ── SHIPPING BANNERS ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 px-4 mt-6 mb-6">
         {shippingBanners.map((banner) => (
           <div
             key={banner.type}
+            onClick={() => handleBannerClick(banner.type)}
             className="relative h-[130px] rounded-xl overflow-hidden cursor-pointer group shadow-md"
+            title={`Browse ${banner.label} products`}
           >
             {/* Flag Background */}
             <div className="absolute inset-0 bg-black">

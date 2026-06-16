@@ -3,6 +3,7 @@ import FAQSection from "@/components/Faq";
 import HeroSlider from "@/components/HomeSlider";
 import CustomerReviews from "@/components/Review";
 import SpecialProducts from "@/components/SpecialProducts";
+import LegitSlider from "@/components/LegitSlider";
 import Image from "next/image";
 
 export default function Home() {
@@ -11,8 +12,9 @@ export default function Home() {
     <HeroSlider/>
     <Brands/>
     <SpecialProducts/>
+    <LegitSlider/>
     <CustomerReviews/>
-     <SpecialProducts/>
+     <SpecialProducts title="Products That May Interest You"/>
      <FAQSection/>
     </>
   );

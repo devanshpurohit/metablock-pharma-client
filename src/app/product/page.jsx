@@ -1,7 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { useCart } from "@/context/CartContext";
+import { useCurrency } from "@/context/CurrencyContext";
+import { useFavorites } from "@/context/FavoritesContext";
 import {
   ShoppingCart,
   Heart,
@@ -14,43 +17,72 @@ import {
   Minus,
   Share2
 } from "lucide-react";
-import CustomerReviews from "@/components/Review";
+import ProductReviews from "@/components/ProductReviews";
 import SpecialProducts from "@/components/SpecialProducts";
+import api, { resolveImageUrl } from "@/utils/api";
 
-// ── Sample Product Data ──
-const productData = {
-  id: 1,
-  name: "Multi-Ester Test 400 Pharmaqo Labs US",
-  brand: "Pharmaqo Labs US",
-  price: 95.0,
-  oldPrice: 115.0,
-  rating: 4.8,
-  reviewsCount: 124,
-  availability: "In Stock",
-  sku: "PH-TEST-400",
-  badge: "USA DOMESTIC",
-  images: [
-    "/assets/pic.png",
-    "data:image/jpeg;base64,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",
-    "https://placehold.co/600x600/f5f5f5/1565C0?text=Product+Image+1",
-    "https://placehold.co/600x600/f5f5f5/1565C0?text=Product+Image+2"
-  ],
-  description: "Multi-Ester Test 400 is a powerful blend of three testosterone esters, designed for serious athletes seeking maximum gains. It provides a steady release of testosterone into the bloodstream, ensuring optimal performance and recovery.",
-  specs: [
-    { label: "Concentration", value: "400mg/ml" },
-    { label: "Volume", value: "10ml Vial" },
-    { label: "Form", value: "Injectable" },
-    { label: "Storage", value: "Room Temperature" },
-  ]
-};
+function ProductDetailsContent() {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
 
-export default function ProductDetailsPage() {
+  const [productData, setProductData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
   const { addToCart } = useCart();
+  const { formatPrice } = useCurrency();
+  const { isFavorite, toggleFavorite } = useFavorites();
   const [isZooming, setIsZooming] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    if (!id) {
+      setLoading(false);
+      setError("No product selected");
+      return;
+    }
+
+    api.get(`/products/${id}`)
+      .then(res => {
+        const p = res.data;
+        if (!p) {
+          setError("Product not found");
+          setLoading(false);
+          return;
+        }
+        setProductData({
+          id: p._id,
+          name: p.productName,
+          brand: p.brandId?.brandName || "Pharma",
+          price: p.price,
+          oldPrice: p.discountPrice || (p.price * 1.1),
+          rating: 4.8,
+          reviewsCount: 124,
+          availability: p.stock > 0 ? "In Stock" : "Out of Stock",
+          sku: p.sku,
+          badge: p.trending ? "TRENDING" : "USA DOMESTIC",
+          images: p.mainImage 
+            ? [resolveImageUrl(p.mainImage), ...(p.galleryImages || []).map(resolveImageUrl)] 
+            : ["/assets/pic.png"],
+          description: p.description || `${p.productName} is a high-grade product.`,
+          specs: [
+            { label: "Concentration", value: "400mg/ml" },
+            { label: "Volume", value: "10ml Vial" },
+            { label: "Form", value: "Injectable" },
+            { label: "Storage", value: "Room Temperature" },
+          ]
+        });
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Error loading product details:", err);
+        setError("Error loading product details");
+        setLoading(false);
+      });
+  }, [id]);
 
   const handleMouseMove = (e) => {
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
@@ -61,6 +93,22 @@ export default function ProductDetailsPage() {
 
   const incrementQty = () => setQuantity(q => q + 1);
   const decrementQty = () => setQuantity(q => q > 1 ? q - 1 : 1);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center font-sans">
+        <div className="text-gray-500 font-semibold">Loading product details...</div>
+      </div>
+    );
+  }
+
+  if (error || !productData) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center font-sans text-red-500 font-semibold">
+        {error || "Product not found"}
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white font-sans">
@@ -167,12 +215,12 @@ export default function ProductDetailsPage() {
 
             {/* Price */}
             <div className="flex items-end gap-3 mb-8">
-              <span className="text-4xl font-black text-primary">${productData.price.toFixed(2)}</span>
+              <span className="text-4xl font-black text-primary">{formatPrice(productData.price)}</span>
               {productData.oldPrice && (
-                <span className="text-lg text-gray-400 line-through mb-1">${productData.oldPrice.toFixed(2)}</span>
+                <span className="text-lg text-gray-400 line-through mb-1">{formatPrice(productData.oldPrice)}</span>
               )}
               <span className="bg-accent text-primary text-xs font-bold px-2 py-1 rounded mb-1.5">
-                SAVE ${(productData.oldPrice - productData.price).toFixed(2)}
+                SAVE {formatPrice(productData.oldPrice - productData.price)}
               </span>
             </div>
 
@@ -235,8 +283,23 @@ export default function ProductDetailsPage() {
                   Add To Cart
                 </button>
 
-                <button className="w-14 h-14 shrink-0 rounded-xl border border-gray-200 flex items-center justify-center text-gray-400 hover:text-red-500 hover:border-red-100 hover:bg-red-50 transition-all group">
-                  <Heart className="w-6 h-6 group-hover:fill-red-500 transition-colors" />
+                <button 
+                  onClick={() => toggleFavorite({
+                    id: productData.id,
+                    brand: productData.brand,
+                    name: productData.name,
+                    price: productData.price,
+                    rating: productData.rating,
+                    badge: productData.badge,
+                    image: productData.images[0]
+                  })}
+                  className={`w-14 h-14 shrink-0 rounded-xl border flex items-center justify-center transition-all ${
+                    isFavorite(productData.id) 
+                      ? "border-red-200 bg-red-50 text-red-500 hover:bg-red-100" 
+                      : "border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-100 hover:bg-red-50"
+                  }`}
+                >
+                  <Heart className={`w-6 h-6 ${isFavorite(productData.id) ? "fill-red-500 text-red-500" : ""}`} />
                 </button>
               </div>
             </div>
@@ -333,8 +396,20 @@ export default function ProductDetailsPage() {
 
       {/* ── Reviews ── */}
       <div className="bg-gray-50 border-t border-gray-100">
-        <CustomerReviews />
+        <ProductReviews productId={productData?.id} />
       </div>
     </div>
+  );
+}
+
+export default function ProductDetailsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white flex items-center justify-center font-sans">
+        <div className="text-gray-500 font-semibold">Loading product details...</div>
+      </div>
+    }>
+      <ProductDetailsContent />
+    </Suspense>
   );
 }

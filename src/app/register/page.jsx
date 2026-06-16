@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import api from "../../utils/api";
 
 export default function RegisterAccount() {
   const [form, setForm] = useState({
@@ -14,6 +15,9 @@ export default function RegisterAccount() {
     agreed: false,
     captcha: false,
   });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -21,6 +25,72 @@ export default function RegisterAccount() {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    if (!form.firstName.trim() || !form.lastName.trim()) {
+      setError("First Name and Last Name are required.");
+      return;
+    }
+    if (!form.email.trim()) {
+      setError("E-mail address is required.");
+      return;
+    }
+    if (!form.telephone.trim()) {
+      setError("Telephone number is required.");
+      return;
+    }
+    if (!form.password || form.password.length < 8) {
+      setError("Password must be at least 8 characters long.");
+      return;
+    }
+    if (form.password !== form.passwordConfirm) {
+      setError("Passwords do not match.");
+      return;
+    }
+    if (!form.captcha) {
+      setError("Please complete the captcha verification.");
+      return;
+    }
+    if (!form.agreed) {
+      setError("You must agree to the Privacy Policy.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const res = await api.post("/auth/register-customer", {
+        name: `${form.firstName.trim()} ${form.lastName.trim()}`,
+        email: form.email.trim().toLowerCase(),
+        password: form.password,
+        phone: form.telephone.trim()
+      });
+
+      setSuccess("Account registered successfully! Redirecting...");
+      
+      // Save details to localStorage
+      localStorage.setItem("customerToken", res.data.token);
+      localStorage.setItem("customerUser", JSON.stringify(res.data.user));
+
+      // Dispatch event to notify layout
+      window.dispatchEvent(new Event("customerAuthChange"));
+
+      const searchParams = new URLSearchParams(window.location.search);
+      const redirectUrl = searchParams.get("redirect") || "/";
+
+      setTimeout(() => {
+        window.location.href = redirectUrl;
+      }, 1500);
+
+    } catch (err) {
+      setError(err.response?.data?.message || err.message || "Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inputClass =
@@ -44,8 +114,20 @@ export default function RegisterAccount() {
         .
       </p>
 
-      {/* ── Your Personal Details ── */}
-      <h2 className="text-sm font-bold text-gray-900 mb-4">Your Personal Details</h2>
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-sm mb-5">
+          {error}
+        </div>
+      )}
+      {success && (
+        <div className="bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-sm mb-5">
+          {success}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit}>
+        {/* ── Your Personal Details ── */}
+        <h2 className="text-sm font-bold text-gray-900 mb-4">Your Personal Details</h2>
 
       <div className="flex flex-col gap-3 mb-6">
         {/* First Name */}
@@ -226,10 +308,15 @@ export default function RegisterAccount() {
             className="w-4 h-4 border border-gray-400 rounded-sm accent-primary cursor-pointer"
           />
         </label>
-        <button className="bg-primary hover:bg-secondary text-white text-sm font-semibold px-7 py-2.5 rounded-sm transition-colors duration-150">
-          Continue
+        <button
+          type="submit"
+          disabled={loading}
+          className="bg-primary hover:bg-secondary text-white text-sm font-semibold px-7 py-2.5 rounded-sm transition-colors duration-150 disabled:opacity-50"
+        >
+          {loading ? "Registering..." : "Continue"}
         </button>
       </div>
+      </form>
     </div>
   );
 }

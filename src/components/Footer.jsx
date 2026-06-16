@@ -1,30 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "@/utils/api";
 
-const customers = [
-  "Sitemap",
-  "Contact",
-  "Conditions of Use",
-  "Privacy Policy",
-  "Shipping",
-  "Steroids For Sale via Zelle",
-  "Buy Steroids with Bitcoins",
-  "FAQ",
-];
-
-const popularPages = [
-  "Anabolic Steroids",
-  "Injectable Steroids (Liquids)",
-  "Oral Steroids(Steroid Pills)",
-  "HGH / Peptides",
-  "Post Cycle Therapy",
-  "Fat Burners",
-  "Cycles (Steroid Programs)",
-  "Syringes (Injection)",
-  "USA Domestic",
-  "Turkish Pharmacy Products",
-  "Steroids For Sale",
+const customerLinks = [
+  { label: "Contact", href: "/contact" },
+  { label: "Conditions of Use", href: "/conditions" },
+  { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Shipping", href: "/shipping" },
+  { label: "Steroids For Sale via Zelle", href: "/payment-methods" },
+  { label: "Buy Steroids with Bitcoins", href: "/buy-steroids-bitcoin" },
+  { label: "FAQ", href: "/#faq" },
 ];
 
 const featuredPages = [
@@ -40,10 +26,10 @@ const featuredPages = [
   { label: "Liothyronine Sodium", active: false },
 ];
 
-const FooterLink = ({ label, active = false }) => (
+const FooterLink = ({ label, active = false, href = "#" }) => (
   <li className="border-b border-gray-700 last:border-b-0">
     <a
-      href="#"
+      href={href}
       className={`flex items-center gap-2 py-2.5 text-sm transition-colors duration-150 ${
         active ? "text-secondary" : "text-gray-300 hover:text-white"
       }`}
@@ -57,6 +43,43 @@ const FooterLink = ({ label, active = false }) => (
 export default function Footer() {
   const [email, setEmail] = useState("");
   const [agreed, setAgreed] = useState(false);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    api.get("/categories?limit=100")
+      .then((res) => {
+        setCategories(res.data?.data || []);
+      })
+      .catch((err) => {
+        console.error("Error loading categories for footer:", err);
+      });
+  }, []);
+
+  const handleSubscribe = async (e) => {
+    if (e) e.preventDefault();
+    if (!email.trim()) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+    if (!agreed) {
+      alert("You must agree to the Privacy Policy to subscribe.");
+      return;
+    }
+    try {
+      await api.post("/newsletter", { email: email.trim() });
+      alert("Subscribed successfully!");
+      setEmail("");
+    } catch (err) {
+      console.error("Error subscribing to newsletter:", err);
+      alert(err.response?.data?.message || "Failed to subscribe. Please try again.");
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSubscribe();
+    }
+  };
 
   return (
     <footer className="bg-[#1a1a1a] text-white w-full">
@@ -69,8 +92,8 @@ export default function Footer() {
               Customers
             </h3>
             <ul>
-              {customers.map((item) => (
-                <FooterLink key={item} label={item} />
+              {customerLinks.map((item) => (
+                <FooterLink key={item.label} label={item.label} href={item.href} />
               ))}
             </ul>
           </div>
@@ -81,9 +104,24 @@ export default function Footer() {
               Popular Page
             </h3>
             <ul>
-              {popularPages.map((item) => (
-                <FooterLink key={item} label={item} />
-              ))}
+              {categories.length > 0 ? (
+                categories.slice(0, 10).map((cat) => (
+                  <FooterLink
+                    key={cat._id}
+                    label={cat.categoryName}
+                    href={`/all-products?category=${cat._id}`}
+                  />
+                ))
+              ) : (
+                <>
+                  <FooterLink label="Anabolic Steroids" href="/all-products" />
+                  <FooterLink label="Injectable Steroids" href="/all-products" />
+                  <FooterLink label="Oral Steroids" href="/all-products" />
+                  <FooterLink label="HGH / Peptides" href="/all-products" />
+                  <FooterLink label="Post Cycle Therapy" href="/all-products" />
+                  <FooterLink label="Fat Burners" href="/all-products" />
+                </>
+              )}
             </ul>
           </div>
 
@@ -94,7 +132,12 @@ export default function Footer() {
             </h3>
             <ul>
               {featuredPages.map((item) => (
-                <FooterLink key={item.label} label={item.label} active={item.active} />
+                <FooterLink
+                  key={item.label}
+                  label={item.label}
+                  href={`/all-products?search=${encodeURIComponent(item.label)}`}
+                  active={item.active}
+                />
               ))}
             </ul>
           </div>
@@ -117,9 +160,13 @@ export default function Footer() {
                   placeholder="Your email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   className="flex-1 bg-[#2a2a2a] text-gray-300 placeholder-gray-500 text-sm px-3 py-2.5 outline-none"
                 />
-                <button className="bg-white text-primary border-l border-gray-600 px-4 py-2.5 text-sm font-semibold flex items-center gap-1.5 hover:bg-gray-100 transition-colors">
+                <button 
+                  onClick={handleSubscribe}
+                  className="bg-white text-primary border-l border-gray-600 px-4 py-2.5 text-sm font-semibold flex items-center gap-1.5 hover:bg-gray-100 transition-colors"
+                >
                   {/* Email icon */}
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -138,7 +185,7 @@ export default function Footer() {
                 />
                 <span className="text-gray-400 text-xs">
                   I have read and agree to the{" "}
-                  <a href="#" className="text-gray-300 hover:text-white underline">
+                  <a href="/privacy-policy" className="text-gray-300 hover:text-white underline">
                     Privacy Policy
                   </a>
                 </span>

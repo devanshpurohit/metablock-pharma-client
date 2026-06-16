@@ -1,5 +1,7 @@
 import { ShoppingCart, Heart, Crown, Truck } from "lucide-react";
 import Link from "next/link";
+import { useCurrency } from "@/context/CurrencyContext";
+import { useFavorites } from "@/context/FavoritesContext";
 
 // ─── Star Rating ──────────────────────────────────────────────────────────────
 function StarRating({ rating = 0, max = 5 }) {
@@ -58,21 +60,59 @@ function DomesticBadge({ label = "USA DOMESTIC" }) {
 
 // ─── ProductCard ──────────────────────────────────────────────────────────────
 export default function ProductCard({
-  brand = "PeptidePlus USA",
-  name = "Semaglutide 5 PeptidePlus USA",
-  price = 130.00,
-  rating = 5,
-  isTopSeller = false,
-  isOriginal = false,
-  domestic = "USA DOMESTIC",
-  productType = "vial",        // "vial" | "pill" | "injectable"
+  product,
+  id: propId,
+  brand: propBrand,
+  name: propName,
+  price: propPrice,
+  rating: propRating,
+  isTopSeller: propIsTopSeller,
+  isOriginal: propIsOriginal,
+  domestic: propDomestic,
+  badge: propBadge,
+  productType: propProductType,
   vialColor = "#5b9bd5",
   vialLabel = "Semaglutide",
   vialDose = "5mg",
-  image,
+  image: propImage,
   onAddToCart,
   onFavorite,
 }) {
+  const id = product?.id || propId;
+  const brand = product?.brand || propBrand || "PeptidePlus USA";
+  const name = product?.name || propName || "Semaglutide 5 PeptidePlus USA";
+  const price = product?.price !== undefined ? product.price : (propPrice !== undefined ? propPrice : 130.00);
+  const rating = product?.rating !== undefined ? product.rating : (propRating !== undefined ? propRating : 5);
+  const isTopSeller = product?.isTopSeller !== undefined ? product.isTopSeller : (product?.topSeller !== undefined ? product.topSeller : (propIsTopSeller !== undefined ? propIsTopSeller : false));
+  const isOriginal = product?.isOriginal !== undefined ? product.isOriginal : (propIsOriginal !== undefined ? propIsOriginal : false);
+  const domestic = product?.domestic || product?.badge || propDomestic || propBadge || "USA DOMESTIC";
+  const productType = product?.productType || propProductType || "vial";
+  const image = product?.image || propImage;
+
+  const { formatPrice } = useCurrency();
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const favorited = isFavorite(id);
+
+  const handleFavoriteClick = (e) => {
+    e.preventDefault();
+    if (onFavorite) {
+      onFavorite();
+    } else {
+      toggleFavorite({
+        id,
+        brand,
+        name,
+        price,
+        rating,
+        isTopSeller,
+        isOriginal,
+        domestic,
+        productType,
+        image
+      });
+    }
+  };
+
   return (
     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden flex flex-col hover:shadow-lg transition-shadow duration-200 w-full">
 
@@ -82,7 +122,7 @@ export default function ProductCard({
       </div>
 
       {/* ── Product Image Area ── */}
-      <Link href="/product" className="relative flex items-center justify-center px-4 py-4 min-h-[220px]">
+      <Link href={`/product?id=${id}`} className="relative flex items-center justify-center px-4 py-4 min-h-[220px]">
         {isOriginal && <OriginalBadge />}
 
         {image ? (
@@ -101,14 +141,14 @@ export default function ProductCard({
         {/* Brand */}
         <p className="text-gray-500 text-sm">{brand}</p>
         {/* Product Name */}
-        <Link href="/product">
+        <Link href={`/product?id=${id}`}>
           <p className="text-gray-900 font-semibold text-sm leading-snug hover:text-primary transition-colors">{name}</p>
         </Link>
         {/* Stars */}
         <StarRating rating={rating} />
         {/* Price */}
         <p className="text-gray-900 font-bold text-xl mt-1">
-          ${price.toFixed(2)}
+          {formatPrice(price)}
         </p>
 
         {/* ── Actions ── */}
@@ -121,10 +161,14 @@ export default function ProductCard({
             Add To Cart
           </button>
           <button
-            onClick={onFavorite}
-            className="w-10 h-10 flex items-center justify-center border-2 border-gray-200 rounded hover:border-secondary hover:text-secondary text-gray-400 transition-colors duration-200 flex-shrink-0"
+            onClick={handleFavoriteClick}
+            className={`w-10 h-10 flex items-center justify-center border-2 rounded transition-colors duration-200 flex-shrink-0 ${
+              favorited 
+                ? "border-red-200 bg-red-50 text-red-500 hover:bg-red-100" 
+                : "border-gray-200 text-gray-400 hover:border-secondary hover:text-secondary"
+            }`}
           >
-            <Heart className="w-4 h-4" />
+            <Heart className={`w-4 h-4 ${favorited ? "fill-red-500" : ""}`} />
           </button>
         </div>
       </div>

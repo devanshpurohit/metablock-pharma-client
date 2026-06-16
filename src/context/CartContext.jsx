@@ -20,6 +20,8 @@ export function CartProvider({ children }) {
         setIsLoaded(true);
     }, []);
 
+    const [isCartOpen, setIsCartOpen] = useState(false);
+
     // Save to local storage
     useEffect(() => {
         if (isLoaded) {
@@ -37,6 +39,7 @@ export function CartProvider({ children }) {
             }
             return [...prev, { ...product, quantity }];
         });
+        setIsCartOpen(true);
     };
 
     const removeFromCart = (productId) => {
@@ -48,8 +51,12 @@ export function CartProvider({ children }) {
         setCartItems(prev => prev.map(item => item.id === productId ? { ...item, quantity } : item));
     };
 
+    const clearCart = () => {
+        setCartItems([]);
+    };
+
     return (
-        <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQuantity }}>
+        <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQuantity, isCartOpen, setIsCartOpen, clearCart }}>
             {children}
         </CartContext.Provider>
     );

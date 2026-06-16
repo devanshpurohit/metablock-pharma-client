@@ -1,11 +1,21 @@
-import { Dosis } from "next/font/google";
+import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import CartSidebar from "@/components/CartSidebar";
+import ChatWidget from "@/components/ChatWidget";
 import { CartProvider } from "@/context/CartContext";
+import { CurrencyProvider } from "@/context/CurrencyContext";
+import { FavoritesProvider } from "@/context/FavoritesContext";
 
-const dosis = Dosis({
-  variable: "--font-dosis",
+const outfit = Outfit({
+  variable: "--font-outfit",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+});
+
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -18,14 +28,20 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${dosis.variable} h-full antialiased`}
+      className={`${outfit.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
-        <CartProvider>
-          <Navbar/>
-          {children}
-          <Footer/>
-        </CartProvider>
+        <CurrencyProvider>
+          <FavoritesProvider>
+            <CartProvider>
+              <Navbar/>
+              {children}
+              <Footer/>
+              <CartSidebar/>
+              <ChatWidget/>
+            </CartProvider>
+          </FavoritesProvider>
+        </CurrencyProvider>
       </body>
     </html>
   );
