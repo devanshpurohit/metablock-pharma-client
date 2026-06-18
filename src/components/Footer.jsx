@@ -1,40 +1,27 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import api from "@/utils/api";
+import { Send, Check, Shield } from "lucide-react";
 
 const customerLinks = [
-  { label: "Contact", href: "/contact" },
+  { label: "Contact Desk", href: "/contact" },
   { label: "Conditions of Use", href: "/conditions" },
   { label: "Privacy Policy", href: "/privacy-policy" },
-  { label: "Shipping", href: "/shipping" },
-  { label: "Steroids For Sale via Zelle", href: "/payment-methods" },
-  { label: "Buy Steroids with Bitcoins", href: "/buy-steroids-bitcoin" },
-  { label: "FAQ", href: "/#faq" },
-];
-
-const featuredPages = [
-  { label: "Boldenone Undecylenate", active: false },
-  { label: "Drostanolone Enanthate", active: false },
-  { label: "Drostanolone Propionate", active: false },
-  { label: "Anavar", active: false },
-  { label: "Dianabol", active: false },
-  { label: "Halotestin", active: false },
-  { label: "Glutathione", active: true },
-  { label: "Hexarelin", active: false },
-  { label: "Bromocriptine", active: false },
-  { label: "Liothyronine Sodium", active: false },
+  { label: "Shipping Policies", href: "/shipping" },
+  { label: "Zelle Payments Guide", href: "/payment-methods" },
+  { label: "Buy Steroids with Bitcoin", href: "/buy-steroids-bitcoin" },
+  { label: "FAQ Help", href: "/#faq" },
 ];
 
 const FooterLink = ({ label, active = false, href = "#" }) => (
-  <li className="border-b border-gray-700 last:border-b-0">
+  <li className="list-none">
     <a
       href={href}
-      className={`flex items-center gap-2 py-2.5 text-sm transition-colors duration-150 ${
-        active ? "text-secondary" : "text-gray-300 hover:text-white"
+      className={`flex items-center gap-1.5 py-1.5 text-[11px] transition-all duration-300 transform hover:translate-x-1.5 uppercase tracking-wider ${
+        active ? "text-secondary font-bold" : "text-gray-400 hover:text-secondary font-bold"
       }`}
     >
-      <span className="text-xs">›</span>
+      <span className="text-secondary opacity-65 text-[12px] leading-none">›</span>
       {label}
     </a>
   </li>
@@ -82,30 +69,34 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#1a1a1a] text-white w-full">
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+    <footer className="bg-[#0e0e11] text-white w-full border-t border-white/5 relative overflow-hidden font-sans">
+      
+      {/* Decorative top gold line */}
+      <div className="w-full h-[3px] bg-gradient-to-r from-primary via-secondary to-primary opacity-80"></div>
+      
+      <div className="max-w-7xl mx-auto px-6 py-16 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
 
           {/* CUSTOMERS */}
           <div>
-            <h3 className="text-white font-bold text-base tracking-wide mb-4 uppercase">
-              Customers
+            <h3 className="text-white font-serif font-normal text-base tracking-wider mb-6 pb-2 border-b border-secondary/20 w-fit">
+              Customer Desk
             </h3>
-            <ul>
+            <ul className="flex flex-col gap-1.5 p-0 m-0">
               {customerLinks.map((item) => (
                 <FooterLink key={item.label} label={item.label} href={item.href} />
               ))}
             </ul>
           </div>
 
-          {/* POPULAR PAGE */}
+          {/* POPULAR CATEGORIES */}
           <div>
-            <h3 className="text-white font-bold text-base tracking-wide mb-4 uppercase">
-              Popular Page
+            <h3 className="text-white font-serif font-normal text-base tracking-wider mb-6 pb-2 border-b border-secondary/20 w-fit">
+              Product Catalog
             </h3>
-            <ul>
+            <ul className="flex flex-col gap-1.5 p-0 m-0">
               {categories.length > 0 ? (
-                categories.slice(0, 10).map((cat) => (
+                categories.slice(0, 7).map((cat) => (
                   <FooterLink
                     key={cat._id}
                     label={cat.categoryName}
@@ -114,7 +105,6 @@ export default function Footer() {
                 ))
               ) : (
                 <>
-                  <FooterLink label="Anabolic Steroids" href="/all-products" />
                   <FooterLink label="Injectable Steroids" href="/all-products" />
                   <FooterLink label="Oral Steroids" href="/all-products" />
                   <FooterLink label="HGH / Peptides" href="/all-products" />
@@ -125,109 +115,85 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* FEATURED PAGES */}
+          {/* SECURITY ASSURANCE */}
           <div>
-            <h3 className="text-white font-bold text-base tracking-wide mb-4 uppercase">
-              Featured Pages
+            <h3 className="text-white font-serif font-normal text-base tracking-wider mb-6 pb-2 border-b border-secondary/20 w-fit">
+              Shop Guarantee
             </h3>
-            <ul>
-              {featuredPages.map((item) => (
-                <FooterLink
-                  key={item.label}
-                  label={item.label}
-                  href={`/all-products?search=${encodeURIComponent(item.label)}`}
-                  active={item.active}
-                />
-              ))}
-            </ul>
+            <div className="flex flex-col gap-4">
+              <div className="flex items-start gap-3 bg-[#16161b]/50 border border-white/5 rounded-2xl p-4">
+                <Shield className="w-8 h-8 text-secondary flex-shrink-0" />
+                <div>
+                  <h4 className="text-xs font-bold text-white uppercase tracking-wider">Secure Payment</h4>
+                  <p className="text-[10px] text-gray-400 mt-1 leading-relaxed">
+                    All payment transaction data is encrypted and secure. We accept Bitcoin, Zelle, and Credit Cards.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 bg-[#16161b]/50 border border-white/5 rounded-2xl p-4">
+                <Check className="w-8 h-8 text-secondary flex-shrink-0" />
+                <div>
+                  <h4 className="text-xs font-bold text-white uppercase tracking-wider">100% Genuine</h4>
+                  <p className="text-[10px] text-gray-400 mt-1 leading-relaxed">
+                    Direct partner of major GMP-certified athletic steroid labs with public test records.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* NEWSLETTER + FOLLOW US */}
-          <div className="flex flex-col gap-8">
-            {/* Newsletter */}
+          {/* NEWSLETTER */}
+          <div className="flex flex-col gap-6">
             <div>
-              <h3 className="text-white font-bold text-base tracking-wide mb-3 uppercase">
+              <h3 className="text-white font-serif font-normal text-base tracking-wider mb-6 pb-2 border-b border-secondary/20 w-fit">
                 Newsletter
               </h3>
-              <p className="text-gray-400 text-sm mb-4 leading-relaxed">
-                Never miss an update or promotion by signing up for our newsletter.
+              <p className="text-gray-400 text-xs mb-4.5 leading-relaxed font-medium">
+                Subscribe for private discounts, price drops, and restocking notices.
               </p>
 
-              {/* Email Input + Send Button */}
-              <div className="flex items-stretch border border-gray-600 overflow-hidden mb-3">
+              {/* Form Input Container */}
+              <div className="flex flex-col gap-2.5 w-full">
                 <input
                   type="email"
                   placeholder="Your email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="flex-1 bg-[#2a2a2a] text-gray-300 placeholder-gray-500 text-sm px-3 py-2.5 outline-none"
+                  className="bg-[#16161b] border border-white/10 rounded-xl text-gray-200 placeholder-gray-500 text-xs px-4.5 py-3 outline-none focus:border-secondary transition-all w-full"
                 />
                 <button 
                   onClick={handleSubscribe}
-                  className="bg-white text-primary border-l border-gray-600 px-4 py-2.5 text-sm font-semibold flex items-center gap-1.5 hover:bg-gray-100 transition-colors"
+                  className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 border-0 px-5.5 py-3 text-[10px] font-extrabold uppercase tracking-widest text-white rounded-xl shadow-md hover:shadow-gold-glow flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-[0.98]"
+                  aria-label="Subscribe"
                 >
-                  {/* Email icon */}
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  Send
+                  <Send className="w-3.5 h-3.5" />
+                  Subscribe Now
                 </button>
               </div>
 
-              {/* Checkbox */}
-              <label className="flex items-center gap-2 cursor-pointer">
+              {/* Terms Checkbox */}
+              <label className="flex items-start gap-2.5 cursor-pointer select-none mt-4">
                 <input
                   type="checkbox"
                   checked={agreed}
                   onChange={(e) => setAgreed(e.target.checked)}
-                  className="w-4 h-4 accent-secondary cursor-pointer"
+                  className="w-4 h-4 rounded border-gray-700 bg-transparent text-secondary focus:ring-0 cursor-pointer mt-0.5"
                 />
-                <span className="text-gray-400 text-xs">
-                  I have read and agree to the{" "}
-                  <a href="/privacy-policy" className="text-gray-300 hover:text-white underline">
-                    Privacy Policy
-                  </a>
+                <span className="text-gray-400 text-[10px] leading-tight font-semibold">
+                  I agree to the privacy policy rules.
                 </span>
               </label>
-            </div>
-
-            {/* Follow Us */}
-            <div>
-              <h3 className="text-white font-bold text-base tracking-wide mb-4 uppercase">
-                Follow Us
-              </h3>
-              <div className="flex items-center gap-3">
-                {/* Telegram */}
-                <a
-                  href="#"
-                  className="w-10 h-10 rounded-full bg-[#2AABEE] flex items-center justify-center hover:opacity-80 transition-opacity"
-                >
-                  <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
-                  </svg>
-                </a>
-
-                {/* Chat / Message */}
-                <a
-                  href="#"
-                  className="w-10 h-10 rounded-full bg-[#2a2a2a] border border-gray-600 flex items-center justify-center hover:border-gray-400 transition-colors"
-                >
-                  <svg className="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                </a>
-              </div>
             </div>
           </div>
 
         </div>
       </div>
 
-      {/* Bottom Bar */}
-      <div className="bg-primary py-3 px-6 text-center">
-        <p className="text-white text-sm font-medium">
-          © 2026 All rights reserved.
+      {/* Copyright Bottom Bar */}
+      <div className="bg-[#08080a] py-4 px-6 text-center border-t border-white/5">
+        <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest">
+          © 2026 Roidspharma. Sterile Laboratory Grade Compounds. All rights reserved.
         </p>
       </div>
     </footer>

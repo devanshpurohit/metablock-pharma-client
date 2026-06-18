@@ -217,8 +217,8 @@ export default function AccountLogin() {
               </h2>
 
               {/* Email Field */}
-              <div className="flex items-center gap-4 mb-4">
-                <label className="text-sm text-gray-700 w-32 shrink-0">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 mb-4">
+                <label className="text-sm text-gray-700 w-full sm:w-32 shrink-0">
                   E-Mail Address
                 </label>
                 <input
@@ -226,14 +226,14 @@ export default function AccountLogin() {
                   placeholder="E-Mail Address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 border border-gray-300 rounded-sm px-3 py-2 text-sm text-gray-700 placeholder-gray-400 outline-none focus:border-gray-400 bg-white"
+                  className="w-full sm:flex-1 border border-gray-300 rounded-sm px-3 py-2 text-sm text-gray-700 placeholder-gray-400 outline-none focus:border-gray-400 bg-white"
                   required
                 />
               </div>
 
               {/* Password Field */}
-              <div className="flex items-center gap-4 mb-5">
-                <label className="text-sm text-gray-700 w-32 shrink-0">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 mb-5">
+                <label className="text-sm text-gray-700 w-full sm:w-32 shrink-0">
                   Password
                 </label>
                 <input
@@ -241,7 +241,7 @@ export default function AccountLogin() {
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="flex-1 border border-gray-300 rounded-sm px-3 py-2 text-sm text-gray-700 placeholder-gray-400 outline-none focus:border-gray-400 bg-white"
+                  className="w-full sm:flex-1 border border-gray-300 rounded-sm px-3 py-2 text-sm text-gray-700 placeholder-gray-400 outline-none focus:border-gray-400 bg-white"
                   required
                 />
               </div>
@@ -283,8 +283,8 @@ export default function AccountLogin() {
               </p>
 
               {/* Email Input */}
-              <div className="flex items-center gap-4 mb-6">
-                <label className="text-sm text-gray-700 w-32 shrink-0">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 mb-6">
+                <label className="text-sm text-gray-700 w-full sm:w-32 shrink-0">
                   E-Mail Address
                 </label>
                 <input
@@ -292,7 +292,7 @@ export default function AccountLogin() {
                   placeholder="E-Mail Address"
                   value={resetEmail}
                   onChange={(e) => setResetEmail(e.target.value)}
-                  className="flex-1 border border-gray-300 rounded-sm px-3 py-2 text-sm text-gray-700 placeholder-gray-400 outline-none focus:border-gray-400 bg-white"
+                  className="w-full sm:flex-1 border border-gray-300 rounded-sm px-3 py-2 text-sm text-gray-700 placeholder-gray-400 outline-none focus:border-gray-400 bg-white"
                   required
                 />
               </div>
@@ -332,21 +332,21 @@ export default function AccountLogin() {
               </p>
 
               {/* Read-only Email Field */}
-              <div className="flex items-center gap-4 mb-4">
-                <label className="text-sm text-gray-500 w-32 shrink-0">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 mb-4">
+                <label className="text-sm text-gray-505 w-full sm:w-32 shrink-0">
                   E-Mail Address
                 </label>
                 <input
                   type="email"
                   value={resetEmail}
                   disabled
-                  className="flex-1 border border-gray-200 rounded-sm px-3 py-2 text-sm text-gray-400 bg-gray-50 outline-none cursor-not-allowed"
+                  className="w-full sm:flex-1 border border-gray-200 rounded-sm px-3 py-2 text-sm text-gray-400 bg-gray-50 outline-none cursor-not-allowed"
                 />
               </div>
 
               {/* OTP Field */}
-              <div className="flex items-center gap-4 mb-6">
-                <label className="text-sm text-gray-700 w-32 shrink-0 font-semibold">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 mb-6">
+                <label className="text-sm text-gray-700 w-full sm:w-32 shrink-0 font-semibold">
                   OTP Code
                 </label>
                 <input
@@ -354,7 +354,7 @@ export default function AccountLogin() {
                   placeholder="Enter 6-digit code"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
-                  className="flex-1 border border-gray-300 rounded-sm px-3 py-2 text-sm text-gray-700 placeholder-gray-400 outline-none focus:border-gray-400 bg-white"
+                  className="w-full sm:flex-1 border border-gray-300 rounded-sm px-3 py-2 text-sm text-gray-700 placeholder-gray-400 outline-none focus:border-gray-400 bg-white"
                   maxLength={6}
                   required
                 />
@@ -394,21 +394,21 @@ export default function AccountLogin() {
               </p>
 
               {/* Read-only Email Field */}
-              <div className="flex items-center gap-4 mb-4">
-                <label className="text-sm text-gray-500 w-32 shrink-0">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 mb-4">
+                <label className="text-sm text-gray-500 w-full sm:w-32 shrink-0">
                   E-Mail Address
                 </label>
                 <input
                   type="email"
                   value={resetEmail}
                   disabled
-                  className="flex-1 border border-gray-200 rounded-sm px-3 py-2 text-sm text-gray-400 bg-gray-50 outline-none cursor-not-allowed"
+                  className="w-full sm:flex-1 border border-gray-200 rounded-sm px-3 py-2 text-sm text-gray-400 bg-gray-50 outline-none cursor-not-allowed"
                 />
               </div>
 
               {/* New Password Field */}
-              <div className="flex items-center gap-4 mb-4">
-                <label className="text-sm text-gray-700 w-32 shrink-0">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 mb-4">
+                <label className="text-sm text-gray-700 w-full sm:w-32 shrink-0">
                   New Password
                 </label>
                 <input
@@ -416,14 +416,14 @@ export default function AccountLogin() {
                   placeholder="New Password (min 8 chars)"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="flex-1 border border-gray-300 rounded-sm px-3 py-2 text-sm text-gray-700 placeholder-gray-400 outline-none focus:border-gray-400 bg-white"
+                  className="w-full sm:flex-1 border border-gray-300 rounded-sm px-3 py-2 text-sm text-gray-700 placeholder-gray-400 outline-none focus:border-gray-400 bg-white"
                   required
                 />
               </div>
 
               {/* Confirm Password Field */}
-              <div className="flex items-center gap-4 mb-6">
-                <label className="text-sm text-gray-700 w-32 shrink-0">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 mb-6">
+                <label className="text-sm text-gray-700 w-full sm:w-32 shrink-0">
                   Confirm Password
                 </label>
                 <input
@@ -431,7 +431,7 @@ export default function AccountLogin() {
                   placeholder="Confirm New Password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="flex-1 border border-gray-300 rounded-sm px-3 py-2 text-sm text-gray-700 placeholder-gray-400 outline-none focus:border-gray-400 bg-white"
+                  className="w-full sm:flex-1 border border-gray-300 rounded-sm px-3 py-2 text-sm text-gray-700 placeholder-gray-400 outline-none focus:border-gray-400 bg-white"
                   required
                 />
               </div>

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, ArrowUpRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import api, { resolveImageUrl } from "@/utils/api";
 
@@ -13,16 +13,16 @@ const BANNER_KEYWORDS = {
 };
 
 const shippingBanners = [
-  { label: "USA DOMESTIC",        flagColors: ["#B22234","#FFFFFF","#3C3B6E"], type: "usa" },
-  { label: "EU DOMESTIC",         flagColors: ["#003399","#FFCC00"],           type: "eu" },
-  { label: "UK DOMESTIC",         flagColors: ["#012169","#FFFFFF","#C8102E"], type: "uk" },
-  { label: "INTERNATIONAL SHIPPING", flagColors: ["#1a3a5c","#2a6ab5"],       type: "intl" },
+  { label: "USA DOMESTIC",        desc: "Fast 2-4 day domestic delivery within United States.", flagColors: ["#B22234","#FFFFFF","#3C3B6E"], type: "usa" },
+  { label: "EU DOMESTIC",         desc: "Secure delivery to all European Union member states.", flagColors: ["#003399","#FFCC00"],           type: "eu" },
+  { label: "UK DOMESTIC",         desc: "Direct shipping to England, Scotland, Wales & NI.", flagColors: ["#012169","#FFFFFF","#C8102E"], type: "uk" },
+  { label: "INTERNATIONAL SHIPPING", desc: "Reliable worldwide shipping with tracking number.", flagColors: ["#1a3a5c","#2a6ab5"],       type: "intl" },
 ];
 
 // ─── Flag SVGs ────────────────────────────────────────────────────────────────
 function UsaFlag() {
   return (
-    <svg viewBox="0 0 300 180" className="w-full h-full object-cover opacity-80">
+    <svg viewBox="0 0 300 180" className="w-full h-full object-cover opacity-60">
       {/* Stripes */}
       {[...Array(13)].map((_, i) => (
         <rect key={i} x="0" y={i * (180 / 13)} width="300" height={180 / 13}
@@ -46,7 +46,7 @@ function UsaFlag() {
 
 function EuFlag() {
   return (
-    <svg viewBox="0 0 300 200" className="w-full h-full">
+    <svg viewBox="0 0 300 200" className="w-full h-full object-cover opacity-60">
       <rect width="300" height="200" fill="#003399" />
       {/* EU circle of stars */}
       {[...Array(12)].map((_, i) => {
@@ -64,7 +64,7 @@ function EuFlag() {
 
 function UkFlag() {
   return (
-    <svg viewBox="0 0 300 180" className="w-full h-full">
+    <svg viewBox="0 0 300 180" className="w-full h-full object-cover opacity-60">
       <rect width="300" height="180" fill="#012169" />
       {/* White diagonals */}
       <line x1="0" y1="0" x2="300" y2="180" stroke="white" strokeWidth="36" />
@@ -84,7 +84,7 @@ function UkFlag() {
 
 function IntlFlag() {
   return (
-    <svg viewBox="0 0 300 200" className="w-full h-full">
+    <svg viewBox="0 0 300 200" className="w-full h-full object-cover opacity-60">
       <defs>
         <radialGradient id="globe" cx="50%" cy="50%" r="50%">
           <stop offset="0%" stopColor="#1e5ba8" />
@@ -132,25 +132,20 @@ export default function Brands() {
   const visibleCount = 9;
 
   useEffect(() => {
-    // Fetch brands AND categories in parallel
     Promise.all([
       api.get("/brands?limit=100"),
       api.get("/categories?limit=100"),
     ]).then(([brandRes, catRes]) => {
-      // Build brands list
       const fetched = brandRes.data.data || [];
       setBrands(
         fetched.map((b) => ({
           id: b._id,
           name: b.brandName,
           image: resolveImageUrl(b.logo),
-          country: "USA",
-          bg: "bg-gray-100",
-          border: "border-gray-200",
+          country: "GENUINE PRODUCTS",
         }))
       );
 
-      // Build categoryMap: match each banner type by keyword
       const cats = catRes.data.data || [];
       const map = {};
       shippingBanners.forEach(({ type }) => {
@@ -171,13 +166,11 @@ export default function Brands() {
     });
   }, []);
 
-  // Navigate to all-products, filtered by category if matched
   const handleBannerClick = (type) => {
     const catId = categoryMap[type];
     if (catId) {
       router.push(`/all-products?category=${catId}`);
     } else {
-      // Fallback — open all products page without filter
       router.push("/all-products");
     }
   };
@@ -190,90 +183,72 @@ export default function Brands() {
 
   const visibleBrands = brands.slice(carouselStart, carouselStart + visibleCount);
 
-
   return (
-    <div className="w-full bg-white font-sans">
+    <div className="w-full bg-gradient-to-b from-[#FDFBF7] to-[#FAF8F5] pt-12 pb-6 px-4 md:px-8 font-sans border-b border-secondary/5">
+      
+      {/* ── Section Title ── */}
+      <div className="max-w-7xl mx-auto mb-10 text-center">
+        <span className="text-secondary text-[10px] font-black uppercase tracking-[0.3em] mb-2 block">
+          PARTNER LABORATORIES
+        </span>
+        <h2 className="font-serif text-2xl md:text-3.5xl text-gray-900 font-normal tracking-wide">
+          Authorized Manufacturers
+        </h2>
+        <div className="w-16 h-[2px] bg-secondary/30 mx-auto mt-4"></div>
+      </div>
 
-      {/* ── BRAND CAROUSEL ── */}
-      <div className="border-b border-gray-200 py-5 px-2 flex items-center gap-1 bg-white">
+      {/* ── BRAND GRID (Horizontal Shelf) ── */}
+      <div className="max-w-7xl mx-auto flex items-center gap-4 relative mb-2">
         {/* Left Arrow */}
         <button
           onClick={handlePrev}
           disabled={carouselStart === 0}
-          className="p-2 text-gray-500 hover:text-gray-900 disabled:opacity-25 flex-shrink-0 transition-colors"
+          className="absolute left-0 md:-left-5 z-20 hidden md:flex p-2 text-gray-400 hover:text-secondary disabled:opacity-20 flex-shrink-0 transition-all border border-secondary/15 rounded-full bg-white shadow-md hover:scale-105 cursor-pointer active:scale-95 items-center justify-center"
+          aria-label="Previous Brand"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
 
-        {/* Brands */}
-        <div className="flex flex-1 items-start justify-start md:justify-around overflow-x-auto scrollbar-hide gap-4 md:gap-0 px-2 md:px-0">
-          {visibleBrands.map((brand, i) => (
-            <div
-              key={carouselStart + i}
-              onClick={() => router.push(`/all-products?brand=${brand.id}`)}
-              className="flex flex-col items-center gap-2 cursor-pointer group w-[100px]"
-            >
-              {/* Circle */}
-              <div className={`relative w-[72px] h-[72px] rounded-full border-2 ${brand.border} ${brand.bg}
-                flex items-center justify-center shadow-sm group-hover:border-primary transition-colors overflow-hidden bg-white`}>
-                {brand.image && (
-                  <img src={brand.image} alt={brand.name} className="w-full h-full object-contain p-1.5" />
-                )}
+        {/* Brands Outer Row */}
+        <div className="flex-1 flex items-center justify-start md:justify-around overflow-x-auto scrollbar-hide gap-5 px-6 py-2">
+          {brands.map((brand, i) => {
+            const isVisibleOnDesktop = i >= carouselStart && i < carouselStart + visibleCount;
+            return (
+              <div
+                key={brand.id || i}
+                onClick={() => router.push(`/all-products?brand=${brand.id}`)}
+                className={`flex-col items-center gap-3.5 cursor-pointer group w-[105px] shrink-0 ${
+                  isVisibleOnDesktop ? "flex" : "flex md:hidden"
+                }`}
+              >
+                {/* Circle Logo Box */}
+                <div className="relative w-20 h-20 rounded-full border border-secondary/15 shadow-sm flex items-center justify-center p-2 hover:border-secondary hover:shadow-gold-glow transition-all duration-300 transform group-hover:scale-[1.03] bg-white">
+                  {brand.image && (
+                    <img src={brand.image} alt={brand.name} className="w-full h-full object-contain p-0.5" />
+                  )}
+                </div>
+                {/* Name Details */}
+                <div className="text-center leading-tight">
+                  <p className="text-[11px] font-bold text-gray-800 group-hover:text-secondary transition-colors duration-200">
+                    {brand.name}
+                  </p>
+                  <p className="text-[9px] text-gray-400 font-semibold uppercase tracking-wider mt-0.5">{brand.country}</p>
+                </div>
               </div>
-              {/* Name */}
-              <div className="text-center leading-tight">
-                <p className="text-[11px] font-semibold text-gray-800 group-hover:text-primary transition-colors">
-                  {brand.name}
-                </p>
-                <p className="text-[11px] text-gray-500">{brand.country}</p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Right Arrow */}
         <button
           onClick={handleNext}
           disabled={carouselStart >= brands.length - visibleCount}
-          className="p-2 text-gray-500 hover:text-gray-900 disabled:opacity-25 flex-shrink-0 transition-colors"
+          className="absolute right-0 md:-right-5 z-20 hidden md:flex p-2 text-gray-400 hover:text-secondary disabled:opacity-20 flex-shrink-0 transition-all border border-secondary/15 rounded-full bg-white shadow-md hover:scale-105 cursor-pointer active:scale-95 items-center justify-center"
+          aria-label="Next Brand"
         >
           <ChevronRight className="w-5 h-5" />
         </button>
       </div>
-
-      {/* ── SHIPPING BANNERS ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 px-4 mt-6 mb-6">
-        {shippingBanners.map((banner) => (
-          <div
-            key={banner.type}
-            onClick={() => handleBannerClick(banner.type)}
-            className="relative h-[130px] rounded-xl overflow-hidden cursor-pointer group shadow-md"
-            title={`Browse ${banner.label} products`}
-          >
-            {/* Flag Background */}
-            <div className="absolute inset-0 bg-black">
-              {flagComponents[banner.type]}
-            </div>
-
-            {/* Dark overlay */}
-            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors" />
-
-            {/* Label */}
-            <div className="absolute inset-0 flex items-end justify-start p-3">
-              <span
-                className="text-white font-black text-xl leading-tight drop-shadow-lg"
-                style={{ fontFamily: "'Impact', 'Arial Black', sans-serif", letterSpacing: "0.5px" }}
-              >
-                {banner.label}
-              </span>
-            </div>
-
-            {/* Hover border effect */}
-            <div className="absolute inset-0 border-2 border-transparent group-hover:border-white/40 rounded-xl transition-colors" />
-          </div>
-        ))}
-      </div>
-
     </div>
   );
 }

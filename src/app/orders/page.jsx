@@ -119,7 +119,7 @@ export default function OrdersPage() {
                   <div className="p-6 flex flex-wrap md:flex-nowrap items-center justify-between gap-4">
                     <div>
                       <div className="flex items-center gap-3">
-                        <span className="text-sm font-bold text-gray-950 font-mono">#{order._id}</span>
+                        <span className="text-sm font-bold text-gray-950 font-mono inline-block truncate max-w-[120px] sm:max-w-none" title={order._id}>#{order._id}</span>
                         <span className={`text-xs px-2.5 py-0.5 border rounded-full font-semibold uppercase tracking-wider ${getStatusColor(order.status)}`}>
                           {order.status}
                         </span>

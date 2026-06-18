@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -7,6 +7,7 @@
   --color-secondary: #8D5E21;
   --color-accent: #FDF5E6;
   --font-sans: var(--font-dosis), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
 
   @keyframes marquee {
     0% { transform: translateX(0%); }
@@ -14,17 +15,130 @@
   }
 }
 
+/* Custom premium scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #fbfbfb;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d4af37; /* Gold accent scrollbar */
+  border-radius: 9999px;
+  border: 2px solid #fbfbfb;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b8860b;
+}
+
+/* Smooth selection colors */
 ::selection {
   background-color: var(--color-primary);
   color: white;
 }
 
-@layer utilities {
-  .scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-  }
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none; /* Chrome, Safari and Opera */
+/* Global inputs and focus outlines styling */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+select,
+textarea {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-secondary) !important;
+  box-shadow: 0 0 0 3px rgba(141, 94, 33, 0.15) !important;
+  outline: none !important;
+}
+
+/* Custom animations & utilities */
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
+
+/* Glassmorphism backgrounds */
+@utility glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(141, 94, 33, 0.08);
+}
+
+@utility glass-dropdown {
+  background: rgba(20, 20, 20, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Metallic text/bg gradients */
+@utility text-metallic-gold {
+  background: linear-gradient(135deg, #b8860b 0%, #e6ca65 50%, #996515 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@utility bg-metallic-gold {
+  background: linear-gradient(135deg, #b8860b 0%, #f3e5ab 30%, #e6ca65 50%, #cca05a 75%, #996515 100%);
+}
+
+/* Interactive card lifts */
+@utility premium-card-lift {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px -15px rgba(115, 75, 26, 0.12);
+  }
+}
+
+/* Link underline expands from center */
+@utility hover-underline-expand {
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: var(--color-secondary);
+    transform-origin: bottom center;
+    transition: transform 0.3s ease-out;
+  }
+  &:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+/* Luxury Glow utilities */
+@utility border-glow-gold {
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.2);
+}
+
+@utility shadow-gold-glow {
+  box-shadow: 0 15px 35px -10px rgba(141, 94, 33, 0.15), 0 0 25px rgba(212, 175, 55, 0.05);
+}
+
+@utility text-glow-gold {
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+}
+

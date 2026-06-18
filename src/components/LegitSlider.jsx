@@ -22,11 +22,14 @@ export default function LegitSlider() {
   const marqueeItems = [...brands, ...brands, ...brands];
 
   return (
-    <div className="w-full bg-white py-8 border-t border-b border-gray-100 font-sans overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4">
+    <div className="w-full bg-[#1d1207] py-10 border-t border-b border-secondary/20 font-sans overflow-hidden relative">
+      {/* Soft gold backdrop glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[100px] bg-secondary/5 blur-[80px] pointer-events-none rounded-full"></div>
+
+      <div className="max-w-7xl mx-auto px-4 relative z-10">
         {/* Title */}
-        <h3 className="text-center text-gray-800 font-bold text-lg md:text-xl mb-6 tracking-wide uppercase">
-          Is roidspharma.Net Legit? Yes !
+        <h3 className="text-center text-[#ebdcc9] font-serif font-normal text-base md:text-lg mb-8 tracking-widest uppercase">
+          Is roidspharma.Net Legit? <span className="text-metallic-gold font-bold font-sans tracking-wide">YES!</span>
         </h3>
 
         {/* Marquee Container */}
@@ -39,26 +42,27 @@ export default function LegitSlider() {
             .animate-marquee-brands {
               display: flex;
               width: max-content;
-              animation: marquee-scroll 30s linear infinite;
+              animation: marquee-scroll 35s linear infinite;
             }
             .animate-marquee-brands:hover {
               animation-play-state: paused;
             }
           `}</style>
           
-          <div className="animate-marquee-brands flex gap-12 md:gap-20 items-center">
+          <div className="animate-marquee-brands flex gap-12 md:gap-16 items-center">
             {marqueeItems.map((brand, index) => (
-              <div key={index} className="flex flex-col items-center justify-center min-w-[120px] md:min-w-[150px] shrink-0 select-none">
-                <div className="h-12 md:h-14 flex items-center justify-center mb-2">
+              <div key={index} className="flex flex-col items-center justify-center min-w-[90px] md:min-w-[120px] shrink-0 select-none">
+                <div className="h-16 w-16 md:h-20 md:w-20 bg-white border border-secondary/15 rounded-full flex items-center justify-center p-3.5 shadow-md hover:border-secondary hover:shadow-gold-glow transition-all duration-300 transform hover:scale-[1.03]">
                   <img
                     src={resolveImageUrl(brand.logo)}
                     alt={brand.brandName}
-                    className="max-h-full max-w-full object-contain filter contrast-125"
+                    className="max-h-full max-w-full object-contain filter contrast-110"
                     draggable={false}
                   />
                 </div>
-                <span className="text-[9px] md:text-[10px] font-bold text-gray-800 tracking-wider uppercase">
-                  Authorized Retailer
+                <span className="text-[8px] md:text-[9px] font-bold text-[#ebdcc9]/80 tracking-widest uppercase mt-3 flex items-center gap-1">
+                  <span className="w-1 h-1 rounded-full bg-secondary"></span>
+                  Authorized
                 </span>
               </div>
             ))}

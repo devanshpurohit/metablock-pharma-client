@@ -96,7 +96,7 @@ export default function RegisterAccount() {
   const inputClass =
     "w-full border border-gray-300 rounded-sm px-3 py-2 text-sm text-gray-700 placeholder-gray-400 outline-none focus:border-gray-400 bg-white";
 
-  const labelClass = "text-sm text-gray-800 w-48 shrink-0 pt-2";
+  const labelClass = "text-sm text-gray-800 w-full sm:w-48 shrink-0 sm:pt-2";
 
   return (
     <div className="min-h-screen bg-white px-8 py-8 font-sans max-w-3xl">
@@ -131,7 +131,7 @@ export default function RegisterAccount() {
 
       <div className="flex flex-col gap-3 mb-6">
         {/* First Name */}
-        <div className="flex items-start gap-4">
+        <div className="flex flex-col sm:flex-row items-start gap-1.5 sm:gap-4">
           <label className={labelClass}>
             First Name <span className="text-primary">*</span>
           </label>
@@ -146,7 +146,7 @@ export default function RegisterAccount() {
         </div>
 
         {/* Last Name */}
-        <div className="flex items-start gap-4">
+        <div className="flex flex-col sm:flex-row items-start gap-1.5 sm:gap-4">
           <label className={labelClass}>
             Last Name <span className="text-primary">*</span>
           </label>
@@ -161,7 +161,7 @@ export default function RegisterAccount() {
         </div>
 
         {/* E-Mail */}
-        <div className="flex items-start gap-4">
+        <div className="flex flex-col sm:flex-row items-start gap-1.5 sm:gap-4">
           <label className={labelClass}>
             E-Mail <span className="text-primary">*</span>
           </label>
@@ -176,7 +176,7 @@ export default function RegisterAccount() {
         </div>
 
         {/* Telephone */}
-        <div className="flex items-start gap-4">
+        <div className="flex flex-col sm:flex-row items-start gap-1.5 sm:gap-4">
           <label className={labelClass}>
             Telephone <span className="text-primary">*</span>
           </label>
@@ -196,7 +196,7 @@ export default function RegisterAccount() {
 
       <div className="flex flex-col gap-3 mb-6">
         {/* Password */}
-        <div className="flex items-start gap-4">
+        <div className="flex flex-col sm:flex-row items-start gap-1.5 sm:gap-4">
           <label className={labelClass}>
             Password <span className="text-primary">*</span>
           </label>
@@ -211,7 +211,7 @@ export default function RegisterAccount() {
         </div>
 
         {/* Password Confirm */}
-        <div className="flex items-start gap-4">
+        <div className="flex flex-col sm:flex-row items-start gap-1.5 sm:gap-4">
           <label className={labelClass}>
             Password Confirm <span className="text-primary">*</span>
           </label>
@@ -229,7 +229,7 @@ export default function RegisterAccount() {
       {/* ── Newsletter ── */}
       <h2 className="text-sm font-bold text-gray-900 mb-4">Newsletter</h2>
 
-      <div className="flex items-center gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 mb-6">
         <label className={labelClass}>Subscribe</label>
         <div className="flex items-center gap-5">
           <label className="flex items-center gap-1.5 text-sm text-gray-700 cursor-pointer">
@@ -260,7 +260,7 @@ export default function RegisterAccount() {
       {/* ── Captcha ── */}
       <h2 className="text-sm font-bold text-gray-900 mb-4">Captcha</h2>
 
-      <div className="flex items-start gap-4 mb-10">
+      <div className="flex flex-col sm:flex-row items-start gap-1.5 sm:gap-4 mb-10">
         <label className={`${labelClass} leading-snug`}>
           Please complete the captcha <br /> validation below
         </label>
@@ -294,7 +294,7 @@ export default function RegisterAccount() {
       </div>
 
       {/* ── Bottom Bar: Privacy Policy + Continue ── */}
-      <div className="flex items-center justify-end gap-4 border-t border-gray-200 pt-5">
+      <div className="flex flex-col sm:flex-row items-center sm:justify-end gap-4 border-t border-gray-200 pt-5">
         <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
           I have read and agree to the{" "}
           <a href="#" className="text-gray-800 font-medium hover:underline mx-1">
@@ -311,7 +311,7 @@ export default function RegisterAccount() {
         <button
           type="submit"
           disabled={loading}
-          className="bg-primary hover:bg-secondary text-white text-sm font-semibold px-7 py-2.5 rounded-sm transition-colors duration-150 disabled:opacity-50"
+          className="w-full sm:w-auto bg-primary hover:bg-secondary text-white text-sm font-semibold px-7 py-2.5 rounded-sm transition-colors duration-150 disabled:opacity-50"
         >
           {loading ? "Registering..." : "Continue"}
         </button>
