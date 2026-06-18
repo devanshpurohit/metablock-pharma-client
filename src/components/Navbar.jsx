@@ -166,7 +166,7 @@ export default function Navbar() {
             <img 
               src="/assets/pharma.png" 
               alt="Roidspharma Logo" 
-              className="h-11 md:h-20 w-auto object-contain"
+              className="h-16 md:h-28 w-auto object-contain"
             />
           </a>
         </div>
@@ -488,7 +488,7 @@ export default function Navbar() {
             {/* Header */}
             <div className="bg-primary px-6 py-5 flex items-center justify-between text-white shadow-md">
               <a href="/" className="flex items-center">
-                <img src="/assets/pharma.png" alt="Roidspharma Logo" className="h-14 w-auto object-contain" />
+                <img src="/assets/pharma.png" alt="Roidspharma Logo" className="h-20 w-auto object-contain" />
               </a>
               <button 
                 onClick={() => setIsMobileMenuOpen(false)} 
